@@ -152,6 +152,8 @@ public class LedgerSystem {
                     break transactionLoop;
                 }
             }
+            
+            System.out.println("\n");//new line
 
         }
 
