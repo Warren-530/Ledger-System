@@ -19,9 +19,9 @@ public class LedgerSystem {
 
         //Method calling to bulid connection
         DatabaseConnector dbcon = new DatabaseConnector();
-
+        MyFrame window=new MyFrame();
         System.out.println("== Ledger System ==");
-
+        MyFrame frame=new MyFrame();
         //Registration and Login
         whileloop: //if user prefer login, break the whileloop 
         while (true) {//looping to continue registration until user inputs login
