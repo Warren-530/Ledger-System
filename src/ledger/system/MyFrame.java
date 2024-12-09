@@ -236,8 +236,10 @@ public class MyFrame extends JFrame{
                         JOptionPane.showMessageDialog(null,"The password must be longer than 5 characters with letters and digits","Invalid password",JOptionPane.ERROR_MESSAGE);
                         break;
                     }else{
-                        UserTable.insertUser(name, email, password);
+                        String hashedPassword=RegistrationAndLogin.hashPassword(password);
+                        UserTable.insertUser(name, email, hashedPassword);
                         JOptionPane.showMessageDialog(null,"You have successfully created an account! Login Now!","Registration success",JOptionPane.INFORMATION_MESSAGE);
+                        frame.dispose();
                         break;
                     }
                     }
