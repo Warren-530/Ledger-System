@@ -6,9 +6,7 @@ package ledger.system;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.ImageIcon;
@@ -20,28 +18,42 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
+import database.DatabaseConnector;
+import database.UserTable;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Liyik
  */
 public class MyFrame extends JFrame{
-    JPanel panelleft;
-    JPanel panelLogin;
-    JPanel panelRegister;
-    JLayeredPane layer;
-    JLabel welcome;
-    JLabel welcome2;
-    JButton Login;
-    JButton Register;
-    JLabel username;
-    JLabel password;
-    JTextField user;
-    JPasswordField pass;
-    JTabbedPane tabbed;
-    JCheckBox passVisible;
-    ImageIcon show;
-    ImageIcon hide;
-        MyFrame(){
+    static JPanel panelleft;
+    static JPanel panelLogin;
+    static JPanel panelRegister;
+    static JLayeredPane layer;
+    static JLabel welcome;
+    static JLabel welcome2;
+    static JButton Login;
+    static JButton Register;
+    static JLabel emailLogin;
+    static JLabel passwordLogin;
+    static JTextField emailTextL;
+    static JPasswordField passTextL;
+    static JTabbedPane tabbed;
+    static JCheckBox passVisible;
+    static ImageIcon show;
+    static ImageIcon hide;
+    static String email;
+    static String password;
+    static String name;
+    static int userId;
+        public static void main(String[] args) throws SQLException{
+            //Method calling to bulid connection
+            DatabaseConnector dbcon = new DatabaseConnector();
+            JFrame frame=new JFrame();
+            userId=0;
             panelleft=new JPanel();
             panelLogin=new JPanel();
             panelRegister=new JPanel();
@@ -49,10 +61,10 @@ public class MyFrame extends JFrame{
             welcome2=new JLabel();
             Login=new JButton("Login");
             Register=new JButton("Register");
-            username=new JLabel("E-mail:");
-            password=new JLabel("Password");
-            user=new JTextField();
-            pass=new JPasswordField();
+            emailLogin=new JLabel("E-mail:");
+            passwordLogin=new JLabel("Password");
+            emailTextL=new JTextField();
+            passTextL=new JPasswordField();
             tabbed=new JTabbedPane();
             passVisible=new JCheckBox();
             show=new ImageIcon("show-password.png");
@@ -62,24 +74,27 @@ public class MyFrame extends JFrame{
             tabbed.add(panelLogin);
             tabbed.add(panelRegister);
             
-            username.setBounds(100,200,200,50);
-            username.setFont(new Font("Consolas",Font.BOLD,18));
+            emailLogin.setBounds(100,200,200,50);
+            emailLogin.setFont(new Font("Consolas",Font.BOLD,18));
             
-            user.setBounds(100,235,400,50);
+            emailTextL.setBounds(100,235,400,50);
+            emailTextL.setFont(new Font("Consolas",Font.BOLD,18));
             
-            password.setBounds(100,350,200,50);
-            password.setFont(new Font("Consolas",Font.BOLD,18));
+            passwordLogin.setBounds(100,350,200,50);
+            passwordLogin.setFont(new Font("Consolas",Font.BOLD,18));
             
-            pass.setBounds(100,385,400,50);
+            passTextL.setBounds(100,385,400,50);
+            passTextL.setFont(new Font("Consolas",Font.BOLD,18));
+            
             passVisible.setBounds(500,385,55,50);
             passVisible.setBackground(new Color(204,204,204));
             passVisible.setIcon(show);
             passVisible.setSelectedIcon(hide);
             passVisible.addItemListener((ItemEvent e) ->{
                 if (e.getStateChange()==ItemEvent.SELECTED){
-                    pass.setEchoChar((char)0);
+                    passTextL.setEchoChar((char)0);
                 }else{
-                    pass.setEchoChar('*');
+                    passTextL.setEchoChar('*');
                 }
             });
             
@@ -117,20 +132,130 @@ public class MyFrame extends JFrame{
             panelleft.setBounds(0,0,549,720);
             panelleft.setBackground(new Color(51,51,153));
             
+            JButton submit=new JButton("LOG IN");
+            submit.setBounds(200,500,200,50);
+            submit.setFocusable(false);
+            submit.addActionListener((ActionEvent e)->{
+                if (e.getSource()==submit){
+                    email=emailTextL.getText();
+                    password=passTextL.getText();
+                    while (true){
+                    if (!RegistrationAndLogin.isEmailValid(email)){
+                        JOptionPane.showMessageDialog(null,"The email is not valid","Invalid email",JOptionPane.ERROR_MESSAGE);
+                        emailTextL.setText("");
+                        passTextL.setText("");
+                        break;
+                    }if (!UserTable.isRegisteredAccount(email)){
+                        JOptionPane.showMessageDialog(null,"The email has not been registered","Invalid email",JOptionPane.ERROR_MESSAGE);
+                    }
+                    try {
+                        if (!UserTable.checkPassword(email, password)) {
+                            JOptionPane.showMessageDialog(null,"Invalid email or password","Login Unsuccessful",JOptionPane.ERROR_MESSAGE);
+                            break;
+                        }else{
+                            userId = UserTable.getUserId(email);
+                            JOptionPane.showMessageDialog(null,"You have login successfully!Welcome to Ledger System!","Login Success",JOptionPane.INFORMATION_MESSAGE);
+                            frame.dispose();
+                            break;
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        break;
+                        }
+                    }
+                }
+        });
+            
+            
             panelLogin.setBounds(549,0,731,720);
             panelLogin.setBackground(new Color(204,204,204));
             panelLogin.setBorder(BorderFactory.createEtchedBorder());
             panelLogin.setLayout(null);
-            panelLogin.add(username);
-            panelLogin.add(user);
-            panelLogin.add(password);
-            panelLogin.add(pass);
+            panelLogin.add(emailLogin);
+            panelLogin.add(emailTextL);
+            panelLogin.add(passwordLogin);
+            panelLogin.add(passTextL);
             panelLogin.add(passVisible);
+            panelLogin.add(submit);
             
+            JLabel username1=new JLabel("Enter your username:");
+            username1.setBounds(100,200,200,50);
+            username1.setFont(new Font("Consolas",Font.BOLD,18));
+            JTextField usernameField=new JTextField();
+            usernameField.setBounds(100,235,400,50);
+            usernameField.setFont(new Font("Consolas",Font.BOLD,18));
+
+            JLabel passwordReg=new JLabel("Enter a password");
+            passwordReg.setBounds(100,380,200,50);
+            passwordReg.setFont(new Font("Consolas",Font.BOLD,18));
+            
+            JPasswordField passTextR=new JPasswordField();
+            passTextR.setBounds(100,415,400,50);
+            passTextR.setFont(new Font("Consolas",Font.BOLD,18));
+            
+            JCheckBox passVisibleR=new JCheckBox();
+            passVisibleR.setBounds(500,415,55,50);
+            passVisibleR.setBackground(new Color(204,204,204));
+            passVisibleR.setIcon(show);
+            passVisibleR.setSelectedIcon(hide);
+            passVisibleR.addItemListener((ItemEvent e) ->{
+                if (e.getStateChange()==ItemEvent.SELECTED){
+                    passTextR.setEchoChar((char)0);
+                }else{
+                    passTextR.setEchoChar('*');
+                }
+            });
+            
+            JLabel emailReg=new JLabel("Enter your email:");
+            emailReg.setBounds(100,290,400,50);
+            emailReg.setFont(new Font("Consolas",Font.BOLD,18));
+            
+            JTextField emailTextR=new JTextField();
+            emailTextR.setBounds(100,320,400,50);
+            emailTextR.setFont(new Font("Consolas",Font.BOLD,18));
+            
+            JButton submitR=new JButton("REGISTER");
+            submitR.setBounds(200,500,200,50);
+            submitR.setFocusable(false);
+            submitR.addActionListener((ActionEvent e)->{
+                if (e.getSource()==submitR){
+                    email=emailTextR.getText();
+                    password=passTextR.getText();
+                    name=usernameField.getText();
+                    while (true){
+                    if (!RegistrationAndLogin.isEmailValid(email)){
+                        JOptionPane.showMessageDialog(null,"The email is not valid","Invalid email",JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }if (UserTable.isRegisteredAccount(email)){
+                        JOptionPane.showMessageDialog(null,"The email has been registered","Invalid email",JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }if (!RegistrationAndLogin.isNameValid(name)){
+                        JOptionPane.showMessageDialog(null,"The name cannot contain special letters or be left blank.","Invalid name",JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }if (!RegistrationAndLogin.isPasswordValid(password)){
+                        JOptionPane.showMessageDialog(null,"The password must be longer than 5 characters with letters and digits","Invalid password",JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }else{
+                        UserTable.insertUser(name, email, password);
+                        JOptionPane.showMessageDialog(null,"You have successfully created an account! Login Now!","Registration success",JOptionPane.INFORMATION_MESSAGE);
+                        break;
+                    }
+                    }
+                }
+        });
             panelRegister.setBounds(549,0,731,720);
             panelRegister.setBackground(new Color(204,204,204));
             panelRegister.setBorder(BorderFactory.createEtchedBorder());
             panelRegister.setLayout(null);
+
+            panelRegister.add(username1);
+            panelRegister.add(usernameField);
+            panelRegister.add(passwordReg);
+            panelRegister.add(passTextR);
+            panelRegister.add(passVisibleR);
+            panelRegister.add(emailReg);
+            panelRegister.add(emailTextR);
+            panelRegister.add(submitR);
             
             layer=new JLayeredPane();
             layer.setBounds(0,0,1280,720);
@@ -141,16 +266,14 @@ public class MyFrame extends JFrame{
             layer.add(Login,Integer.valueOf(1));
             layer.add(Register,Integer.valueOf(1));
             
-            this.setTitle("Ledger Syste,");//sets title of frame
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//exit application
-            this.setLayout(null);
-            this.setResizable(false);//prevent resizing
-            this.setSize(1280,720);//set size of frame^
-            this.add(layer);
-            this.setVisible(true);//make frame visible
+            frame.setTitle("Ledger Syste,");//sets title of frame
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//exit application
+            frame.setLayout(null);
+            frame.setResizable(false);//prevent resizing
+            frame.setSize(1280,720);//set size of frame^
+            frame.add(layer);
+            frame.setVisible(true);//make frame visible
 
         }
-
-}
 
 }
