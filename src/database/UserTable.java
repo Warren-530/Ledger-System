@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import org.mindrot.jbcrypt.BCrypt;
 
+import com.mysql.cj.protocol.Resultset;
+import java.sql.Statement;
+
 //Class that contains all methods about SQL queries
 public class UserTable {
 
@@ -15,12 +18,27 @@ public class UserTable {
     // Method to insert a new user
     public static void insertUser(String name, String email, String hashedPassword) {
         String sql = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        String sql2 = "INSERT INTO accountbalance (user_id, balance, savings, loan) VALUES (?, NULL, NULL, NULL)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, name);
             stmt.setString(2, email);
             stmt.setString(3, hashedPassword);
 
             stmt.executeUpdate();
+
+            // Insert account userId
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                int userId = rs.getInt(1); // userId is auto-incremented
+
+                // Insert the userId into the ACCOUNT table
+                try (PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+                    stmt2.setInt(1, userId);
+                    stmt2.executeUpdate();
+                }
+                } else {
+                    throw new SQLException("Failed to retrieve generated userId");
+                }
         } catch (SQLException e) {
             System.out.println("Error inserting user: " + e.getMessage());
         }

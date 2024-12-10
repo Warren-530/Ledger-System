@@ -1,6 +1,5 @@
 package ledger.system;
 
-import ledger.system.Transactions;
 import database.AccountBalance;
 import database.DatabaseConnector;
 import database.UserTable;
@@ -124,16 +123,15 @@ public class LedgerSystem {
             loan = AccountBalance.getLoan(userId);
             System.out.printf("Loan: %.2f%n" , loan);
 
-            System.out.println("== Transaction ==");
+            System.out.println("\n== Transaction ==");
             System.out.println("""
                                1.Debit
                                2.Credit
-                               3.Histroy
+                               3.History
                                4.Savings
                                5.Credit Loan
-                               6.Deposit Interest Preditor
+                               6.Deposit Interest Predictor
                                7.Logout
-                               
                                """);
             System.out.print(">");
             transactionOption = sc.nextInt();
@@ -146,6 +144,9 @@ public class LedgerSystem {
                 }
                 case 2 -> {
                     Transactions.credit(userId);//calling credit method
+                }
+                case 3 -> {
+
                 }
                 case 7 -> {
                     System.out.println("Thank you for using Ledger System");
