@@ -20,6 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import database.DatabaseConnector;
 import database.UserTable;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,26 +100,7 @@ public class MyFrame extends JFrame{
                 }
             });
             
-            
-            Login.setBounds(190,400,150,50);
-            Login.setBackground(Color.lightGray);
-            Login.setBorder(BorderFactory.createBevelBorder(1, Color.lightGray, Color.yellow));
-            Login.setFocusable(false);
-            Login.addActionListener((ActionEvent e) -> {
-                if (e.getSource()==Login){    
-                    tabbed.setSelectedIndex(0);
-                }
-            });
-            
-            Register.setBounds(190,500,150,50);
-            Register.setBackground(Color.lightGray);
-            Register.setBorder(BorderFactory.createBevelBorder(1, Color.lightGray, Color.yellow));
-            Register.setFocusable(false);
-            Register.addActionListener((ActionEvent e) -> {
-                if (e.getSource()==Register){  
-                    tabbed.setSelectedIndex(1);
-                }
-            });
+
             
             welcome.setText("Welcome to");
             welcome.setBounds(152,200,250,50);
@@ -245,6 +228,38 @@ public class MyFrame extends JFrame{
                     }
                 }
         });
+            
+                        
+            Login.setBounds(190,400,150,50);
+            Login.setBackground(Color.lightGray);
+            Login.setBorder(BorderFactory.createBevelBorder(1, Color.lightGray, Color.darkGray));
+            Login.setFocusable(false);
+            Login.addActionListener((ActionEvent e) -> {
+                if (e.getSource()==Login){    
+                    Register.setBorder(BorderFactory.createBevelBorder(0, Color.lightGray, Color.darkGray));
+                    Login.setBorder(BorderFactory.createBevelBorder(1, Color.lightGray, Color.darkGray));
+                    tabbed.setSelectedIndex(0);
+                    usernameField.setText("");
+                    passTextR.setText("");
+                    emailTextR.setText("");
+                }
+            });
+            
+            Register.setBounds(190,500,150,50);
+            Register.setBackground(Color.lightGray);
+            Register.setBorder(BorderFactory.createBevelBorder(0, Color.lightGray, Color.darkGray));
+            Register.setFocusable(false);
+            Register.addActionListener((ActionEvent e) -> {
+                if (e.getSource()==Register){  
+                    Register.setBorder(BorderFactory.createBevelBorder(1, Color.lightGray, Color.darkGray));
+                    Login.setBorder(BorderFactory.createBevelBorder(0, Color.lightGray, Color.darkGray));
+                    tabbed.setSelectedIndex(1);
+                    emailTextL.setText("");
+                    passTextL.setText("");
+                    
+                }
+            });
+            
             panelRegister.setBounds(549,0,731,720);
             panelRegister.setBackground(new Color(204,204,204));
             panelRegister.setBorder(BorderFactory.createEtchedBorder());
@@ -269,12 +284,25 @@ public class MyFrame extends JFrame{
             layer.add(Register,Integer.valueOf(1));
             
             frame.setTitle("Ledger Syste,");//sets title of frame
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//exit application
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);//exit application
             frame.setLayout(null);
             frame.setResizable(false);//prevent resizing
             frame.setSize(1280,720);//set size of frame^
             frame.add(layer);
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);//make frame visible
+            
+            frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we){
+                int close=JOptionPane.showConfirmDialog(null,"Do you want to Exit??","Exit",JOptionPane.YES_NO_OPTION);
+                if (close==0){
+                    JOptionPane.showMessageDialog(null,"Thank you for using Ledger System. See you next time!","Exit",JOptionPane.PLAIN_MESSAGE);
+                    frame.dispose();
+                }
+            }
+        
+        });
 
         }
 

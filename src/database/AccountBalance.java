@@ -11,6 +11,25 @@ public class AccountBalance {
     public static Connection connection = getConnection();
 
     //method to get the lastest user balance
+    
+    public static String getName(int userId) {
+        String sql = "SELECT name FROM accountbalance WHERE user_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1,userId);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()){
+                return rs.getString("name");
+            } else {
+                return null;
+            }
+        }catch (SQLException e) {
+            System.out.println("Error fetching balance:"+e.getMessage());
+            return null;
+        }
+    }
+        
     public static double getBalance(int userId) {
         String sql = "SELECT balance FROM accountbalance WHERE user_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
