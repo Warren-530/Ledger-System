@@ -146,7 +146,16 @@ public class LedgerSystem {
                     Transactions.credit(userId);//calling credit method
                 }
                 case 3 -> {
-
+                    
+                }
+                case 4 -> {
+                    Savings.saving(userId); // calling saving method
+                }
+                case 5 -> {
+                    CreditLoan.creditLoan(balance); // calling creditLoan method
+                }
+                case 6 ->{
+                    DepositInterestPredictor.calculateInterest(balance); // calling calculateInterest method
                 }
                 case 7 -> {
                     System.out.println("Thank you for using Ledger System");

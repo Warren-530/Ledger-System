@@ -10,19 +10,20 @@ public class SavingsTable {
 
     public static Connection connection = getConnection();
 
-    public static void insertSavings(int userId, String status, int percentage) {
-        String sql = "INSERT INTO savings (user_id, , status, percentage) VALUES (?, ?, ?)";
+    public static void updateSavings(int userId, String status, int percentage) {
+        String sql = "UPDATE savings SET status = ?, percentage = ? WHERE user_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            // Set values for placeholders
-            stmt.setInt(1, userId);
-            stmt.setString(2, status);
-            stmt.setDouble(3, percentage);
+            // update values for placeholders
+            
+            stmt.setString(1, "Active");
+            stmt.setInt(2, percentage);
+            stmt.setInt(3, userId);
 
             // Execute the insertion
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error inserting savings: " + e.getMessage());
+            System.out.println("Error update savings: " + e.getMessage());
         }
     }
 }
