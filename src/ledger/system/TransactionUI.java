@@ -32,7 +32,8 @@ import javax.swing.JPanel;
  * @author Liyik
  */
 public class TransactionUI {
-
+static JLayeredPane layer;
+static JLabel account;
 static JButton debit;
 static JButton credit;
 static JButton history;
@@ -74,7 +75,7 @@ static double percentage;
         left.setBorder(BorderFactory.createBevelBorder(0));
         
         balance =AccountBalance.getBalance(MyFrame.userId);
-        JLabel account=new JLabel();
+        account=new JLabel();
         account.setText("<html>Account Balance :<br>"+balance+"</html>");
         account.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         account.setBounds(50,200,300,75);
@@ -267,7 +268,7 @@ static double percentage;
             }
         });
         
-        JLayeredPane layer=new JLayeredPane();
+        layer=new JLayeredPane();
         layer.setBounds(0,0,1280,720);
         layer.setLayout(null);
         layer.setBackground(new Color(250, 247, 240));
