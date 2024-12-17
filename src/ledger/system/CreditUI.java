@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import java.time.LocalDate;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -99,18 +100,19 @@ public class CreditUI {
                         JOptionPane.showMessageDialog(null,"Please enter an amount for credit.", "Transaction failed",JOptionPane.INFORMATION_MESSAGE);
                         break;
                     }
-                    if (ifAmountNotValid(amountCheck)){
+                    else if (ifAmountNotValid(amountCheck)||balance<Double.parseDouble(amountCheck)){
                         JOptionPane.showMessageDialog(null,"Please enter an VALID amount for credit.", "Transaction failed",JOptionPane.INFORMATION_MESSAGE);
                         break;
                     }
-                    if (refCheck.trim().equals("")){
+                    else if (refCheck.trim().equals("")){
                         JOptionPane.showMessageDialog(null,"Please enter a description for references", "Transaction failed",JOptionPane.INFORMATION_MESSAGE);
                         break;
-                    }else{
+                    }
+                    else{
                         LocalDate date=LocalDate.now();
-                        AccountBalance.debitBalance(MyFrame.userId, Double.parseDouble(amountCheck));//update the balance of user in account_balance table
-                        TransactionsTable.insertTransaction(MyFrame.userId, "Credit", Double.parseDouble(amountCheck), refCheck, date);//insert a new debit record into transactions table
-                        balance =AccountBalance.getBalance(MyFrame.userId);
+                        balance=AccountBalance.creditBalance(MyFrame.userId, Double.parseDouble(amountCheck));//update the balance of user in account_balance table
+                        AccountBalance.updateBalance(MyFrame.userId,balance);
+                        TransactionsTable.insertTransaction(MyFrame.userId, "Credit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
                         JOptionPane.showMessageDialog(null,"Credit transaction successfully recorded. Current balance is "+balance, "Transaction completed",JOptionPane.PLAIN_MESSAGE);
                         TransactionUI.balance=balance;
                         TransactionUI.WindowStatus=false;
@@ -149,6 +151,7 @@ public class CreditUI {
             int close=JOptionPane.showConfirmDialog(null,"Do you want to cancel this transaction?","Transaction cancellation",JOptionPane.YES_NO_OPTION);
             if (close==0){
                 TransactionUI.WindowStatus=false;
+                SwingUtilities.updateComponentTreeUI(TransactionUI.frame);
                 frame.dispose();
             }
         }

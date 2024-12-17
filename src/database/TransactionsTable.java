@@ -12,8 +12,8 @@ public class TransactionsTable {
 
     public static Connection connection = getConnection();
 
-    public static void insertTransaction(int userId, String transactionType, double amount, String description, LocalDate date) {
-        String sql = "INSERT INTO transactions (user_id, transaction_type, amount, description, date) VALUES (?, ?, ?, ?, ?)";
+    public static void insertTransaction(int userId, String transactionType, double amount, String description, LocalDate date, double balance) {
+        String sql = "INSERT INTO transactions (user_id, transaction_type, amount, description, date, balance) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             // Set values for placeholders
@@ -22,6 +22,7 @@ public class TransactionsTable {
             stmt.setDouble(3, amount);
             stmt.setString(4, description);
             stmt.setDate(5, Date.valueOf(date));//Convert LocalDate to Date in sql
+            stmt.setDouble(6, balance);
 
             // Execute the insertion
             stmt.executeUpdate();

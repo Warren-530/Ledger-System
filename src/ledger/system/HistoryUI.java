@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 
 /**
@@ -44,20 +46,23 @@ static JTable table;
         title.setFont(new Font("Algerian",Font.BOLD,35));
         title.setBounds(60,40,600,50);
         title.setForeground(Color.white);
+        int rowcount=0;
+        Object[][] data=new Object[HistoryValue.getRowCount(rowcount)][5];
+        HistoryValue.getHistory(data);
         
+        String []columnName={"Date","Description","Debit","Credit","Balance"};
         String[]month={"JAN","FEB","MAC","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
         JComboBox comboBox=new JComboBox(month);
         comboBox.setBounds(550,60,100,25);
         comboBox.addActionListener((ActionEvent e)->{
           if (e.getSource()==comboBox){
               System.out.println(comboBox.getSelectedItem());
+              
           }
         });
         
-        
-        Object [][]data={{"Oct 24","living in a new house but having a new problem right now",new Double(1000),new Double(500),new Double(1000)},
-                        {"Oct 24","living",new Double(1000),new Double(500),new Double(1000)}};
-        String []columnName={"Date","Description","Debit","Credit","Balance"};
+
+
         table=new JTable();
 
         table.setFont(new Font("Consolas",Font.PLAIN,15));
@@ -68,13 +73,11 @@ static JTable table;
         TableColumn column=null;
         for(int i=0;i<5;i++){
             column=table.getColumnModel().getColumn(i);
-            if(i==1){
-              
-                column.setPreferredWidth(200);
-            }else if (i==2)
-                column.setPreferredWidth(100);
-            else
-                column.setPreferredWidth(70);
+            switch (i) {
+                case 1 -> column.setPreferredWidth(200);
+                case 2 -> column.setPreferredWidth(100);
+                default -> column.setPreferredWidth(70);
+            }
         }
         for (int row=0;row<table.getRowCount();row++){
             int rowHeight=table.getRowHeight();
@@ -102,11 +105,24 @@ static JTable table;
         frame=new JFrame();
         frame.setLayout(null);
         frame.setBounds(0,0,720,480);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.add(layer);
         frame.setVisible(true);
+        
+        frame.addWindowListener(new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent we){
+            int close=JOptionPane.showConfirmDialog(null,"Do you want to cancel this transaction?","Transaction cancellation",JOptionPane.YES_NO_OPTION);
+            if (close==0){
+                TransactionUI.WindowStatus=false;
+                frame.dispose();
+                
+            }
+        }
+        
+    });
         
 
     }

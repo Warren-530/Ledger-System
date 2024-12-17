@@ -44,6 +44,10 @@ static JFrame frame;
 static JButton exit;
 static boolean WindowStatus=false;
 static double balance;
+static boolean savingStatus;
+static int activate;
+static String percentageS;
+static double percentage;
 
     public static void main(String args[]) {
         debit=new JButton("DEBIT");
@@ -55,7 +59,7 @@ static double balance;
         logout=new JButton("LOGOUT");
         exit=new JButton("LOGOUT AND EXIT");
         
-        String name=null;//AccountBalance.getName(MyFrame.userId);
+        String name=AccountBalance.getName(MyFrame.userId);
         JLabel welcome=new JLabel("<html>Welcome, "+name+"!<br>What can we help you today?");
         welcome.setBounds(40,0,1000,150);
         welcome.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,45));
@@ -69,7 +73,7 @@ static double balance;
         left.setBounds(-5,145,500,680);
         left.setBorder(BorderFactory.createBevelBorder(0));
         
-        balance =0;//AccountBalance.getBalance(MyFrame.userId);
+        balance =AccountBalance.getBalance(MyFrame.userId);
         JLabel account=new JLabel();
         account.setText("<html>Account Balance :<br>"+balance+"</html>");
         account.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -117,7 +121,7 @@ static double balance;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    DebitUI.main(null);
+                    CreditUI.main(null);
                 }
                 }
             
@@ -135,12 +139,12 @@ static double balance;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    DebitUI.main(null);
+                    HistoryUI.main(null);
                 }
                 }
             
         });
-        
+        savingStatus=true;
         savings.setBounds(900,200,300,100);
         savings.setBackground(new Color(12,35,89));
         savings.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -149,13 +153,31 @@ static double balance;
         savings.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         savings.addActionListener((ActionEvent e)->{
             if (e.getSource()==savings){
-                if (WindowStatus){
-                    JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
+                if (savingStatus){
+                    activate=JOptionPane.showConfirmDialog(null,"You have activate your saving. Do you want to stop it?","Saving Cancelation",JOptionPane.YES_NO_OPTION);
+                    if (activate==0){
+                        //inactivate the saving
+                        JOptionPane.showMessageDialog(null,"Saving cancelation success!","Saving Cancelation",JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }else{
-                    WindowStatus=true;
-                    DebitUI.main(null);
+                    activate=JOptionPane.showConfirmDialog(null,"Your saving is inactive. Do you want to activate it?","Saving activation",JOptionPane.YES_NO_OPTION);
+                    //activate saving, enter percentage
+                    while(true){
+                        percentageS=JOptionPane.showInputDialog(null,"Please enter the percentage you wish to deduct from your next debit: ","Saving Percentage",JOptionPane.PLAIN_MESSAGE);
+                        try{
+                            percentage=Double.parseDouble(percentageS);
+                                if (percentage>100){
+                                    JOptionPane.showMessageDialog(null,"Percentage entered cannot exceed 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
+                                    continue;
+                                }
+                            JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        }catch (NumberFormatException a){
+                            JOptionPane.showMessageDialog(null,"Please enter the valid input for percentage.","Invalid value",JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
                 }
-                }
+            }
             
         });
         

@@ -130,6 +130,7 @@ public class MyFrame extends JFrame{
                         break;
                     }if (!UserTable.isRegisteredAccount(email)){
                         JOptionPane.showMessageDialog(null,"The email has not been registered","Invalid email",JOptionPane.ERROR_MESSAGE);
+                        break;
                     }
                     try {
                         if (!UserTable.checkPassword(email, password)) {
@@ -139,6 +140,7 @@ public class MyFrame extends JFrame{
                             userId = UserTable.getUserId(email);
                             JOptionPane.showMessageDialog(null,"You have login successfully!Welcome to Ledger System!","Login Success",JOptionPane.INFORMATION_MESSAGE);
                             frame.dispose();
+                            TransactionUI.main(null);
                             break;
                         }
                     } catch (SQLException ex) {
@@ -222,7 +224,6 @@ public class MyFrame extends JFrame{
                         String hashedPassword=RegistrationAndLogin.hashPassword(password);
                         UserTable.insertUser(name, email, hashedPassword);
                         JOptionPane.showMessageDialog(null,"You have successfully created an account! Login Now!","Registration success",JOptionPane.INFORMATION_MESSAGE);
-                        frame.dispose();
                         break;
                     }
                     }
