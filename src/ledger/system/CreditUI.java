@@ -116,6 +116,8 @@ public class CreditUI {
                         JOptionPane.showMessageDialog(null,"Credit transaction successfully recorded. Current balance is "+balance, "Transaction completed",JOptionPane.PLAIN_MESSAGE);
                         TransactionUI.balance=balance;
                         TransactionUI.WindowStatus=false;
+                        TransactionUI.frame.dispose();
+                        TransactionUI.main(null);
                         frame.dispose();
                         break;
                     }

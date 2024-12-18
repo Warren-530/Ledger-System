@@ -4,6 +4,7 @@
  */
 package ledger.system;
 
+import database.HistoryValue;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -47,8 +48,9 @@ static JTable table;
         title.setBounds(60,40,600,50);
         title.setForeground(Color.white);
         int rowcount=0;
-        Object[][] data=new Object[HistoryValue.getRowCount(rowcount)][5];
-        HistoryValue.getHistory(data);
+        Object[][] data=new Object[HistoryValue.getRowCount(MyFrame.userId, rowcount)][5];
+        HistoryValue.getHistory(MyFrame.userId,data);
+        ExportToCSV.csv(data);
         
         String []columnName={"Date","Description","Debit","Credit","Balance"};
         String[]month={"JAN","FEB","MAC","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};

@@ -5,6 +5,7 @@
 package ledger.system;
 
 import database.AccountBalance;
+import database.TransactionsTable;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -59,7 +61,10 @@ static double percentage;
         deposit=new JButton("<html>DEPOSIT INTEREST<br>PREDICTOR</html>");
         logout=new JButton("LOGOUT");
         exit=new JButton("LOGOUT AND EXIT");
-        
+        LocalDate date = LocalDate.now();
+        JLabel datetime=new JLabel(String.valueOf(date));
+        datetime.setBounds(25,600,300,75);
+        datetime.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         String name=AccountBalance.getName(MyFrame.userId);
         JLabel welcome=new JLabel("<html>Welcome, "+name+"!<br>What can we help you today?");
         welcome.setBounds(40,0,1000,150);
@@ -80,7 +85,7 @@ static double percentage;
         account.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         account.setBounds(50,200,300,75);
         
-        double SavingBalance=0;//AcountBalance.getSavings(MyFrame.userId);
+        double SavingBalance=AccountBalance.getSavings(MyFrame.userId);
         JLabel accSaving=new JLabel();
         accSaving.setText("<html>Savings :<br>"+SavingBalance+"</html>");
         accSaving.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -145,20 +150,25 @@ static double percentage;
                 }
             
         });
-        savingStatus=true;
+        savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
+        percentage=TransactionsTable.getPercentage(MyFrame.userId);
         savings.setBounds(900,200,300,100);
         savings.setBackground(new Color(12,35,89));
         savings.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         savings.setForeground(Color.white);
         savings.setFocusable(false);
         savings.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        
         savings.addActionListener((ActionEvent e)->{
             if (e.getSource()==savings){
                 if (savingStatus){
                     activate=JOptionPane.showConfirmDialog(null,"You have activate your saving. Do you want to stop it?","Saving Cancelation",JOptionPane.YES_NO_OPTION);
                     if (activate==0){
-                        //inactivate the saving
+                        TransactionsTable.updateSaving(MyFrame.userId,false,0);
                         JOptionPane.showMessageDialog(null,"Saving cancelation success!","Saving Cancelation",JOptionPane.INFORMATION_MESSAGE);
+                        frame.dispose();
+                        frame.setVisible(true);
+                        savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
                     }
                 }else{
                     activate=JOptionPane.showConfirmDialog(null,"Your saving is inactive. Do you want to activate it?","Saving activation",JOptionPane.YES_NO_OPTION);
@@ -166,12 +176,18 @@ static double percentage;
                     while(true){
                         percentageS=JOptionPane.showInputDialog(null,"Please enter the percentage you wish to deduct from your next debit: ","Saving Percentage",JOptionPane.PLAIN_MESSAGE);
                         try{
+                            if (percentageS==null)
+                                break;
                             percentage=Double.parseDouble(percentageS);
                                 if (percentage>100){
                                     JOptionPane.showMessageDialog(null,"Percentage entered cannot exceed 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
                                     continue;
                                 }
+                            TransactionsTable.updateSaving(MyFrame.userId,true,percentage);
                             JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
+                            frame.dispose();
+                            frame.setVisible(true);
+                            savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
                             break;
                         }catch (NumberFormatException a){
                             JOptionPane.showMessageDialog(null,"Please enter the valid input for percentage.","Invalid value",JOptionPane.ERROR_MESSAGE);
@@ -286,6 +302,7 @@ static double percentage;
         layer.add(account, Integer.valueOf(1));
         layer.add(accSaving, Integer.valueOf(1));
         layer.add(accLoan, Integer.valueOf(1));
+        layer.add(datetime, Integer.valueOf(1));
         
         frame=new JFrame();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
