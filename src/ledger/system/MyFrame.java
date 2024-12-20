@@ -130,7 +130,6 @@ public class MyFrame extends JFrame{
                         break;
                     }if (!UserTable.isRegisteredAccount(email)){
                         JOptionPane.showMessageDialog(null,"The email has not been registered","Invalid email",JOptionPane.ERROR_MESSAGE);
-                        break;
                     }
                     try {
                         if (!UserTable.checkPassword(email, password)) {

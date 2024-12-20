@@ -48,9 +48,9 @@ static JButton exit;
 static boolean WindowStatus=false;
 static double balance;
 static boolean savingStatus;
-static int activate;
+static double percent;
 static String percentageS;
-static double percentage;
+private static int activate;
 
     public static void main(String args[]) {
         debit=new JButton("DEBIT");
@@ -61,11 +61,13 @@ static double percentage;
         deposit=new JButton("<html>DEPOSIT INTEREST<br>PREDICTOR</html>");
         logout=new JButton("LOGOUT");
         exit=new JButton("LOGOUT AND EXIT");
+
         LocalDate date = LocalDate.now();
         JLabel datetime=new JLabel(String.valueOf(date));
         datetime.setBounds(25,600,300,75);
         datetime.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         String name=AccountBalance.getName(MyFrame.userId);
+
         JLabel welcome=new JLabel("<html>Welcome, "+name+"!<br>What can we help you today?");
         welcome.setBounds(40,0,1000,150);
         welcome.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,45));
@@ -79,8 +81,10 @@ static double percentage;
         left.setBounds(-5,145,500,680);
         left.setBorder(BorderFactory.createBevelBorder(0));
         
+
         balance =AccountBalance.getBalance(MyFrame.userId);
         account=new JLabel();
+
         account.setText("<html>Account Balance :<br>"+balance+"</html>");
         account.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         account.setBounds(50,200,300,75);
@@ -150,8 +154,10 @@ static double percentage;
                 }
             
         });
+
         savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
-        percentage=TransactionsTable.getPercentage(MyFrame.userId);
+        double percentage=TransactionsTable.getPercentage(MyFrame.userId);
+
         savings.setBounds(900,200,300,100);
         savings.setBackground(new Color(12,35,89));
         savings.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -170,6 +176,7 @@ static double percentage;
                         frame.setVisible(true);
                         savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
                     }
+
                 }else{
                     activate=JOptionPane.showConfirmDialog(null,"Your saving is inactive. Do you want to activate it?","Saving activation",JOptionPane.YES_NO_OPTION);
                     //activate saving, enter percentage
@@ -178,12 +185,12 @@ static double percentage;
                         try{
                             if (percentageS==null)
                                 break;
-                            percentage=Double.parseDouble(percentageS);
-                                if (percentage>100){
+                            percent=Double.parseDouble(percentageS);
+                                if (percent>100){
                                     JOptionPane.showMessageDialog(null,"Percentage entered cannot exceed 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
                                     continue;
                                 }
-                            TransactionsTable.updateSaving(MyFrame.userId,true,percentage);
+                            TransactionsTable.updateSaving(MyFrame.userId,true,percent);
                             JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
                             frame.dispose();
                             frame.setVisible(true);
@@ -193,8 +200,10 @@ static double percentage;
                             JOptionPane.showMessageDialog(null,"Please enter the valid input for percentage.","Invalid value",JOptionPane.ERROR_MESSAGE);
                         }
                     }
+
                 }
-            }
+                
+                }
             
         });
         
