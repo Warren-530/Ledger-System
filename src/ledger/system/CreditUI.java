@@ -5,6 +5,7 @@
 package ledger.system;
 
 import database.AccountBalance;
+import database.DatabaseConnector;
 import database.TransactionsTable;
 import java.awt.Color;
 import java.awt.Font;
@@ -42,7 +43,8 @@ public class CreditUI {
     static JLabel reference;
     static JTextArea refText;
     
-    public static void main(String args[]) {
+    public CreditUI(){
+        DatabaseConnector dbcon = new DatabaseConnector();
         
         JPanel Header=new JPanel();
         Header.setBounds(0,0,720,100);
@@ -173,5 +175,8 @@ public class CreditUI {
         }catch (NumberFormatException e){
             return true;
         }
+    }
+    public static void main(String[]args){
+         SwingUtilities.invokeLater(CreditUI::new);
     }
 }

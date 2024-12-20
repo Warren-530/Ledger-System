@@ -5,6 +5,7 @@
 package ledger.system;
 
 import database.AccountBalance;
+import database.DatabaseConnector;
 import database.TransactionsTable;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -53,6 +54,7 @@ static String percentageS;
 static double percentage;
 
     public static void main(String args[]) {
+        DatabaseConnector dbcon = new DatabaseConnector();
         debit=new JButton("DEBIT");
         credit=new JButton("CREDIT");
         history=new JButton("HISTORY");
@@ -109,7 +111,7 @@ static double percentage;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else {
                     WindowStatus=true;
-                    DebitUI.main(null);
+                    DebitUI debitUI=new DebitUI();
                 }
                 }
             
@@ -127,7 +129,7 @@ static double percentage;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    CreditUI.main(null);
+                    CreditUI creditUI = new CreditUI();
                 }
                 }
             
@@ -145,7 +147,7 @@ static double percentage;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    HistoryUI.main(null);
+                    HistoryUI historyUI = new HistoryUI();
                 }
                 }
             
@@ -228,7 +230,7 @@ static double percentage;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    new DepositUI();
+                    DepositUI depositUI = new DepositUI();
                 }
                 }
             
@@ -253,11 +255,7 @@ static double percentage;
                     if (value==0){
                         JOptionPane.showMessageDialog(null,"Thank you for using Ledger System. See you next time!","LOGOUT",JOptionPane.PLAIN_MESSAGE);
                         frame.dispose();
-                        try {
-                            MyFrame.main(null);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(TransactionUI.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        MyFrame myframe=new MyFrame();
                     }
                 }
             }

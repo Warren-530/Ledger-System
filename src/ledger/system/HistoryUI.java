@@ -4,6 +4,7 @@
  */
 package ledger.system;
 
+import database.DatabaseConnector;
 import database.HistoryValue;
 import java.awt.Color;
 import java.awt.Component;
@@ -19,6 +20,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 
 /**
@@ -31,7 +33,8 @@ static JTable table;
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public HistoryUI(){
+        DatabaseConnector dbcon = new DatabaseConnector();
         
         JPanel Header=new JPanel();
         Header.setBounds(0,0,720,100);
@@ -137,5 +140,7 @@ static JTable table;
     });
         
 
+    }public static void main(String[]args){
+         SwingUtilities.invokeLater(HistoryUI::new);
     }
 }

@@ -12,7 +12,7 @@ public class LedgerSystem {
         //Method calling to bulid connection
         DatabaseConnector dbcon = new DatabaseConnector();
         System.out.println("== Ledger System ==");
-        MyFrame.main(null);
+        MyFrame myframe=new MyFrame();
        
  
 

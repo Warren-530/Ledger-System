@@ -4,6 +4,7 @@
  */
 package ledger.system;
 
+import database.DatabaseConnector;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -30,7 +31,9 @@ public class DepositUI {
     JButton AmBank;
     JButton Standard;
     JButton Calculate;
+    private double Period;
     public DepositUI(){
+        DatabaseConnector dbcon = new DatabaseConnector();
         
         
         JPanel Header=new JPanel();
@@ -48,9 +51,7 @@ public class DepositUI {
         RHB.setFocusable(false);
         RHB.setBorder(BorderFactory.createBevelBorder(0));
         
-            
-          
-        
+
         JLabel RHBint=new JLabel("2.6");
         RHBint.setBounds(250,100,100,50);
         RHBint.setFont(new Font("Consolas",Font.BOLD,18));
@@ -66,7 +67,7 @@ public class DepositUI {
         Maybank.setBorder(BorderFactory.createBevelBorder(0));
         
         
-        JLabel Maybankint=new JLabel("2.6");
+        JLabel Maybankint=new JLabel("2.5");
         Maybankint.setBounds(250,150,100,50);
         Maybankint.setFont(new Font("Consolas",Font.BOLD,18));
         Maybankint.setOpaque(true);
@@ -80,7 +81,7 @@ public class DepositUI {
         HL.setBorder(BorderFactory.createBevelBorder(0));
         
         
-        JLabel HLint=new JLabel("2.6");
+        JLabel HLint=new JLabel("2.3");
         HLint.setBounds(250,200,100,50);
         HLint.setFont(new Font("Consolas",Font.BOLD,18));
         HLint.setOpaque(true);
@@ -94,7 +95,7 @@ public class DepositUI {
         Alliance.setBorder(BorderFactory.createBevelBorder(0));
         
         
-        JLabel Allianceint=new JLabel("2.6");
+        JLabel Allianceint=new JLabel("2.85");
         Allianceint.setBounds(250,250,100,50);
         Allianceint.setFont(new Font("Consolas",Font.BOLD,18));
         Allianceint.setOpaque(true);
@@ -108,7 +109,7 @@ public class DepositUI {
         AmBank.setBorder(BorderFactory.createBevelBorder(0));
         
         
-        JLabel AmBankint=new JLabel("2.6");
+        JLabel AmBankint=new JLabel("2.55");
         AmBankint.setBounds(250,300,100,50);
         AmBankint.setFont(new Font("Consolas",Font.BOLD,18));
         AmBankint.setOpaque(true);
@@ -122,7 +123,7 @@ public class DepositUI {
         Standard.setBorder(BorderFactory.createBevelBorder(0));
         
         
-        JLabel Standardint=new JLabel("2.6");
+        JLabel Standardint=new JLabel("2.65");
         Standardint.setBounds(250,350,100,50);
         Standardint.setFont(new Font("Consolas",Font.BOLD,18));
         Standardint.setOpaque(true);
@@ -133,6 +134,15 @@ public class DepositUI {
         JComboBox rate=new JComboBox(period);
         rate.setFont(new Font("Consolas",Font.BOLD,18));
         rate.setBounds(450,250,150,40);
+        rate.addActionListener((ActionEvent e)->{
+            int day=rate.getSelectedIndex();
+            switch(day){
+                case 0 -> Period=365;
+                case 1 -> Period=12;
+                case 2 -> Period=1;
+            }
+        });
+        
         
         Calculate=new JButton("Calculate");
         Calculate.setBounds(400,350,150,50);
@@ -207,6 +217,7 @@ public class DepositUI {
             System.out.println(selectedInterest);
         };
     }
+
                 
     public static void main(String[]args){
          SwingUtilities.invokeLater(DepositUI::new);

@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 /**
  *
  * @author Liyik
@@ -51,7 +52,7 @@ public class MyFrame extends JFrame{
     static String password;
     static String name;
     static int userId;
-        public static void main(String[] args) throws SQLException{
+        public MyFrame(){
             //Method calling to bulid connection
             DatabaseConnector dbcon = new DatabaseConnector();
             JFrame frame=new JFrame();
@@ -306,5 +307,8 @@ public class MyFrame extends JFrame{
         });
 
         }
+        public static void main(String[]args){
+         SwingUtilities.invokeLater(MyFrame::new);
+    }
 
 }
