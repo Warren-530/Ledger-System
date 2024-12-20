@@ -228,7 +228,7 @@ static double percentage;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    DebitUI.main(null);
+                    new DepositUI();
                 }
                 }
             
