@@ -81,6 +81,7 @@ public class CreditUI {
         refText=new JTextArea();
         refText.setBounds(300,260,250,90);
         refText.setFont(new Font("Monospaced",Font.BOLD,20));
+        refText.setLineWrap(true);
         refText.setBorder(BorderFactory.createLineBorder(Color.black));
         refText.setBorder(BorderFactory.createBevelBorder(1,Color.lightGray,Color.darkGray));
         

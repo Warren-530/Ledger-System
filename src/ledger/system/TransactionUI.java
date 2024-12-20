@@ -150,7 +150,7 @@ static double percentage;
                 }
             
         });
-        savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
+        savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
         percentage=TransactionsTable.getPercentage(MyFrame.userId);
         savings.setBounds(900,200,300,100);
         savings.setBackground(new Color(12,35,89));
@@ -168,7 +168,7 @@ static double percentage;
                         JOptionPane.showMessageDialog(null,"Saving cancelation success!","Saving Cancelation",JOptionPane.INFORMATION_MESSAGE);
                         frame.dispose();
                         frame.setVisible(true);
-                        savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
+                        savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
                     }
                 }else{
                     activate=JOptionPane.showConfirmDialog(null,"Your saving is inactive. Do you want to activate it?","Saving activation",JOptionPane.YES_NO_OPTION);
@@ -187,7 +187,7 @@ static double percentage;
                             JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
                             frame.dispose();
                             frame.setVisible(true);
-                            savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
+                            savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
                             break;
                         }catch (NumberFormatException a){
                             JOptionPane.showMessageDialog(null,"Please enter the valid input for percentage.","Invalid value",JOptionPane.ERROR_MESSAGE);
