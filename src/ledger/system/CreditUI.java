@@ -5,6 +5,7 @@
 package ledger.system;
 
 import database.AccountBalance;
+import database.DatabaseConnector;
 import database.TransactionsTable;
 import java.awt.Color;
 import java.awt.Font;
@@ -41,7 +42,8 @@ public class CreditUI {
     static JLabel reference;
     static JTextArea refText;
     
-    public static void main(String args[]) {
+    public CreditUI(){
+        DatabaseConnector dbcon = new DatabaseConnector();
         
         JPanel Header=new JPanel();
         Header.setBounds(0,0,720,100);
@@ -80,6 +82,7 @@ public class CreditUI {
         refText=new JTextArea();
         refText.setBounds(300,260,250,90);
         refText.setFont(new Font("Monospaced",Font.BOLD,20));
+        refText.setLineWrap(true);
         refText.setBorder(BorderFactory.createLineBorder(Color.black));
         refText.setBorder(BorderFactory.createBevelBorder(1,Color.lightGray,Color.darkGray));
         
@@ -116,7 +119,7 @@ public class CreditUI {
                         TransactionUI.balance=balance;
                         TransactionUI.WindowStatus=false;
                         TransactionUI.frame.dispose();
-                        TransactionUI.main(null);
+                        new TransactionUI();
                         frame.dispose();
                         break;
                     }
@@ -170,5 +173,8 @@ public class CreditUI {
         }catch (NumberFormatException e){
             return true;
         }
+    }
+    public static void main(String[]args){
+         SwingUtilities.invokeLater(CreditUI::new);
     }
 }

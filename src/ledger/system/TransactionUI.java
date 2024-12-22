@@ -5,6 +5,7 @@
 package ledger.system;
 
 import database.AccountBalance;
+import database.DatabaseConnector;
 import database.TransactionsTable;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -48,11 +49,12 @@ static JButton exit;
 static boolean WindowStatus=false;
 static double balance;
 static boolean savingStatus;
-static double percent;
+static int activate;
 static String percentageS;
-private static int activate;
+static double percentage;
 
     public static void main(String args[]) {
+        DatabaseConnector dbcon = new DatabaseConnector();
         debit=new JButton("DEBIT");
         credit=new JButton("CREDIT");
         history=new JButton("HISTORY");
@@ -61,13 +63,11 @@ private static int activate;
         deposit=new JButton("<html>DEPOSIT INTEREST<br>PREDICTOR</html>");
         logout=new JButton("LOGOUT");
         exit=new JButton("LOGOUT AND EXIT");
-
         LocalDate date = LocalDate.now();
         JLabel datetime=new JLabel(String.valueOf(date));
         datetime.setBounds(25,600,300,75);
         datetime.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         String name=AccountBalance.getName(MyFrame.userId);
-
         JLabel welcome=new JLabel("<html>Welcome, "+name+"!<br>What can we help you today?");
         welcome.setBounds(40,0,1000,150);
         welcome.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,45));
@@ -81,10 +81,8 @@ private static int activate;
         left.setBounds(-5,145,500,680);
         left.setBorder(BorderFactory.createBevelBorder(0));
         
-
         balance =AccountBalance.getBalance(MyFrame.userId);
         account=new JLabel();
-
         account.setText("<html>Account Balance :<br>"+balance+"</html>");
         account.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         account.setBounds(50,200,300,75);
@@ -113,7 +111,7 @@ private static int activate;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else {
                     WindowStatus=true;
-                    DebitUI.main(null);
+                    DebitUI debitUI=new DebitUI();
                 }
                 }
             
@@ -131,7 +129,7 @@ private static int activate;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    CreditUI.main(null);
+                    CreditUI creditUI = new CreditUI();
                 }
                 }
             
@@ -149,15 +147,13 @@ private static int activate;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    HistoryUI.main(null);
+                    HistoryUI historyUI = new HistoryUI();
                 }
                 }
             
         });
-
-        savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
-        double percentage=TransactionsTable.getPercentage(MyFrame.userId);
-
+        savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
+        percentage=TransactionsTable.getPercentage(MyFrame.userId);
         savings.setBounds(900,200,300,100);
         savings.setBackground(new Color(12,35,89));
         savings.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -174,9 +170,8 @@ private static int activate;
                         JOptionPane.showMessageDialog(null,"Saving cancelation success!","Saving Cancelation",JOptionPane.INFORMATION_MESSAGE);
                         frame.dispose();
                         frame.setVisible(true);
-                        savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
+                        savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
                     }
-
                 }else{
                     activate=JOptionPane.showConfirmDialog(null,"Your saving is inactive. Do you want to activate it?","Saving activation",JOptionPane.YES_NO_OPTION);
                     //activate saving, enter percentage
@@ -185,25 +180,23 @@ private static int activate;
                         try{
                             if (percentageS==null)
                                 break;
-                            percent=Double.parseDouble(percentageS);
-                                if (percent>100){
+                            percentage=Double.parseDouble(percentageS);
+                                if (percentage>100){
                                     JOptionPane.showMessageDialog(null,"Percentage entered cannot exceed 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
                                     continue;
                                 }
-                            TransactionsTable.updateSaving(MyFrame.userId,true,percent);
+                            TransactionsTable.updateSaving(MyFrame.userId,true,percentage);
                             JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
                             frame.dispose();
                             frame.setVisible(true);
-                            savingStatus=TransactionsTable.isSavingActive(MyFrame.userId);
+                            savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
                             break;
                         }catch (NumberFormatException a){
                             JOptionPane.showMessageDialog(null,"Please enter the valid input for percentage.","Invalid value",JOptionPane.ERROR_MESSAGE);
                         }
                     }
-
                 }
-                
-                }
+            }
             
         });
         
@@ -237,7 +230,7 @@ private static int activate;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     WindowStatus=true;
-                    DebitUI.main(null);
+                    DepositUI depositUI = new DepositUI();
                 }
                 }
             
@@ -262,11 +255,7 @@ private static int activate;
                     if (value==0){
                         JOptionPane.showMessageDialog(null,"Thank you for using Ledger System. See you next time!","LOGOUT",JOptionPane.PLAIN_MESSAGE);
                         frame.dispose();
-                        try {
-                            MyFrame.main(null);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(TransactionUI.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        MyFrame myframe=new MyFrame();
                     }
                 }
             }

@@ -31,7 +31,7 @@ public class TransactionsTable {
         }
     }
     
-    public static boolean isSavingActive(int userId){
+    public static boolean SavingActive(int userId){
         String sql = "SELECT status FROM savings WHERE user_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
