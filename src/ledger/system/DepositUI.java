@@ -9,12 +9,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -31,7 +33,7 @@ public class DepositUI {
     JButton AmBank;
     JButton Standard;
     JButton Calculate;
-    private double Period;
+    private int Period=356;
     public DepositUI(){
         DatabaseConnector dbcon = new DatabaseConnector();
         
@@ -41,98 +43,120 @@ public class DepositUI {
         Header.setBackground(new Color(56,36,128));
         
         JPanel body=new JPanel();
-        body.setBounds(0,100,720,380);
+        body.setBounds(0,100,400,380);
         body.setBackground(new Color(240,240,240));
         
+        JPanel right=new JPanel();
+        right.setBounds(400,100,320,380);
+        right.setBackground(new Color(229, 221, 240));
+        
+        JLabel depo=new JLabel("Deposit Interest Predictor");
+        depo.setBounds(30,5,500,50);
+        depo.setFont(new Font("Consolas",Font.BOLD,30));
+        depo.setForeground(Color.white);
+        
+        JLabel select=new JLabel("Select your bank:");
+        select.setBounds(30,50,200,50);
+        select.setFont(new Font("Consolas",Font.BOLD,20));
+        select.setForeground(Color.white);
+        
+        JLabel bank=new JLabel("Bank            Interest rate");
+        bank.setBounds(50,103,500,40);
+        bank.setFont(new Font("Consolas",Font.BOLD,20));
+       
         
         RHB=new JButton("RHB");
-        RHB.setBounds(100,100,150,50);
-        RHB.setFont(new Font("Consolas",Font.BOLD,18));
+        RHB.setBounds(0,140,200,50);
+        RHB.setFont(new Font("Consolas",Font.BOLD,20));
         RHB.setFocusable(false);
         RHB.setBorder(BorderFactory.createBevelBorder(0));
         
 
         JLabel RHBint=new JLabel("2.6");
-        RHBint.setBounds(250,100,100,50);
-        RHBint.setFont(new Font("Consolas",Font.BOLD,18));
+        RHBint.setBounds(200,140,200,50);
+        RHBint.setFont(new Font("Consolas",Font.BOLD,20));
         RHBint.setOpaque(true);
-        RHBint.setBackground(Color.cyan);
+        RHBint.setBackground(new Color(237,237,237));
         RHBint.setHorizontalAlignment(JLabel.CENTER);
         
         
         Maybank=new JButton("Maybank");
-        Maybank.setBounds(100,150,150,50);
-        Maybank.setFont(new Font("Consolas",Font.BOLD,18));
+        Maybank.setBounds(0,190,200,50);
+        Maybank.setFont(new Font("Consolas",Font.BOLD,20));
         Maybank.setFocusable(false);
         Maybank.setBorder(BorderFactory.createBevelBorder(0));
         
         
         JLabel Maybankint=new JLabel("2.5");
-        Maybankint.setBounds(250,150,100,50);
-        Maybankint.setFont(new Font("Consolas",Font.BOLD,18));
+        Maybankint.setBounds(200,190,200,50);
+        Maybankint.setFont(new Font("Consolas",Font.BOLD,20));
         Maybankint.setOpaque(true);
-        Maybankint.setBackground(Color.cyan);
+        Maybankint.setBackground(new Color(237,234,228));  
         Maybankint.setHorizontalAlignment(JLabel.CENTER);
         
         HL=new JButton("HL");
-        HL.setBounds(100,200,150,50);
-        HL.setFont(new Font("Consolas",Font.BOLD,18));
+        HL.setBounds(0,240,200,50);
+        HL.setFont(new Font("Consolas",Font.BOLD,20));
         HL.setFocusable(false);
         HL.setBorder(BorderFactory.createBevelBorder(0));
         
         
         JLabel HLint=new JLabel("2.3");
-        HLint.setBounds(250,200,100,50);
-        HLint.setFont(new Font("Consolas",Font.BOLD,18));
+        HLint.setBounds(200,240,200,50);
+        HLint.setFont(new Font("Consolas",Font.BOLD,20));
         HLint.setOpaque(true);
-        HLint.setBackground(Color.cyan);
+        HLint.setBackground(new Color(237,237,237));
         HLint.setHorizontalAlignment(JLabel.CENTER);
         
         Alliance=new JButton("Alliance");
-        Alliance.setBounds(100,250,150,50);
-        Alliance.setFont(new Font("Consolas",Font.BOLD,18));
+        Alliance.setBounds(0,290,200,50);
+        Alliance.setFont(new Font("Consolas",Font.BOLD,20));
         Alliance.setFocusable(false);
         Alliance.setBorder(BorderFactory.createBevelBorder(0));
         
         
         JLabel Allianceint=new JLabel("2.85");
-        Allianceint.setBounds(250,250,100,50);
-        Allianceint.setFont(new Font("Consolas",Font.BOLD,18));
+        Allianceint.setBounds(200,290,200,50);
+        Allianceint.setFont(new Font("Consolas",Font.BOLD,20));
         Allianceint.setOpaque(true);
-        Allianceint.setBackground(Color.cyan);
+        Allianceint.setBackground(new Color(237,234,228));  
         Allianceint.setHorizontalAlignment(JLabel.CENTER);
         
         AmBank=new JButton("AmBank");
-        AmBank.setBounds(100,300,150,50);
-        AmBank.setFont(new Font("Consolas",Font.BOLD,18));
+        AmBank.setBounds(0,340,200,50);
+        AmBank.setFont(new Font("Consolas",Font.BOLD,20));
         AmBank.setFocusable(false);
         AmBank.setBorder(BorderFactory.createBevelBorder(0));
         
         
         JLabel AmBankint=new JLabel("2.55");
-        AmBankint.setBounds(250,300,100,50);
-        AmBankint.setFont(new Font("Consolas",Font.BOLD,18));
+        AmBankint.setBounds(200,340,200,50);
+        AmBankint.setFont(new Font("Consolas",Font.BOLD,20));
         AmBankint.setOpaque(true);
-        AmBankint.setBackground(Color.cyan);
+        AmBankint.setBackground(new Color(237,237,237));
         AmBankint.setHorizontalAlignment(JLabel.CENTER);
         
         Standard=new JButton("Standard");
-        Standard.setBounds(100,350,150,50);
-        Standard.setFont(new Font("Consolas",Font.BOLD,18));
+        Standard.setBounds(0,390,200,50);
+        Standard.setFont(new Font("Consolas",Font.BOLD,20));
         Standard.setFocusable(false);
         Standard.setBorder(BorderFactory.createBevelBorder(0));
         
         
         JLabel Standardint=new JLabel("2.65");
-        Standardint.setBounds(250,350,100,50);
-        Standardint.setFont(new Font("Consolas",Font.BOLD,18));
+        Standardint.setBounds(200,390,200,50);
+        Standardint.setFont(new Font("Consolas",Font.BOLD,20));
         Standardint.setOpaque(true);
-        Standardint.setBackground(Color.cyan);
+        Standardint.setBackground(new Color(237,234,228));  
         Standardint.setHorizontalAlignment(JLabel.CENTER);
+        
+        JLabel selectPeriod=new JLabel("Period:");
+        selectPeriod.setBounds(450,205,150,50);
+        selectPeriod.setFont(new Font("Consolas",Font.BOLD,20));
         
         String []period={"Daily","Monthly","Annually"};
         JComboBox rate=new JComboBox(period);
-        rate.setFont(new Font("Consolas",Font.BOLD,18));
+        rate.setFont(new Font("Consolas",Font.BOLD,20));
         rate.setBounds(450,250,150,40);
         rate.addActionListener((ActionEvent e)->{
             int day=rate.getSelectedIndex();
@@ -145,8 +169,10 @@ public class DepositUI {
         
         
         Calculate=new JButton("Calculate");
-        Calculate.setBounds(400,350,150,50);
-        Calculate.setFont(new Font("Consolas",Font.BOLD,18));
+        Calculate.setBounds(450,350,150,50);
+        Calculate.setFont(new Font("Consolas",Font.BOLD,20));
+        Calculate.setBackground(new Color(56,36,128));
+        Calculate.setForeground(Color.white);
         Calculate.setFocusable(false);
         Calculate.setBorder(BorderFactory.createBevelBorder(0));
        
@@ -164,6 +190,7 @@ public class DepositUI {
             layer.setBounds(0,0,720,480);
             layer.add(Header, Integer.valueOf(0));
             layer.add(body, Integer.valueOf(0));
+            layer.add(right, Integer.valueOf(0));
             layer.add(RHB, Integer.valueOf(1));
             layer.add(RHBint, Integer.valueOf(1));
             layer.add(Maybank, Integer.valueOf(1));
@@ -178,7 +205,10 @@ public class DepositUI {
             layer.add(Standardint, Integer.valueOf(1));
             layer.add(Calculate, Integer.valueOf(1));
             layer.add(rate, Integer.valueOf(1));
-            
+            layer.add(select, Integer.valueOf(1));
+            layer.add(bank, Integer.valueOf(1));
+            layer.add(selectPeriod, Integer.valueOf(1));
+            layer.add(depo, Integer.valueOf(1));
             
             
             JFrame frame=new JFrame();
@@ -211,10 +241,27 @@ public class DepositUI {
         AmBank.setBorder(BorderFactory.createBevelBorder(0));
         Standard.setBorder(BorderFactory.createBevelBorder(0));
     }
-    
+    private double answer;
     private ActionListener cal(){
+        DecimalFormat df = new DecimalFormat("0.00");
         return e->{
-            System.out.println(selectedInterest);
+            answer=(10000*selectedInterest/100)/Period;
+            String format=df.format(answer);
+            if (selectedInterest==0){
+                JOptionPane.showMessageDialog(null,"Please select a bank","Bank not selected",JOptionPane.ERROR_MESSAGE);
+            }else{
+                switch (Period){
+                    case 1:
+                        JOptionPane.showMessageDialog(null,"Your annually interest is RM"+format+".","Prediction result",JOptionPane.INFORMATION_MESSAGE);
+                        break;
+                    case 12:
+                        JOptionPane.showMessageDialog(null,"Your monthly interest is RM"+format+".","Prediction result",JOptionPane.INFORMATION_MESSAGE);
+                        break;
+                    case 365:
+                        JOptionPane.showMessageDialog(null,"Your daily interest is RM"+format+".","Prediction result",JOptionPane.INFORMATION_MESSAGE);
+                        break;
+                }
+            }
         };
     }
 
