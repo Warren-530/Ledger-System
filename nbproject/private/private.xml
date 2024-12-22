@@ -20,6 +20,14 @@
             </bookmark>
         </file>
         <file>
+            <url>src/ledger/system/Transactions.java</url>
+            <bookmark id="12">
+                <name/>
+                <line>13</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
             <url>src/database/AccountBalance.java</url>
             <bookmark id="4">
                 <name/>
@@ -53,14 +61,6 @@
             </bookmark>
         </file>
         <file>
-            <url>src/ledger/system/Transactions.java</url>
-            <bookmark id="12">
-                <name/>
-                <line>13</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
             <url>src/database/transactionsTable.java</url>
             <bookmark id="9">
                 <name/>
@@ -70,15 +70,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/CreditUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/HistoryValue.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/DebitUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/TransactionUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/AccountBalance.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/TransactionsTable.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/HistoryUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/MyFrame.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
