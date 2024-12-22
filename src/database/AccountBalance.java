@@ -93,9 +93,57 @@ public class AccountBalance {
     }
 
     //Update the balance for debit operation
+
     public static double debitBalance(int userId, double amountToAdd, boolean savingStatus,double percentage) {
+
+    
+
         String selectSql = "SELECT balance FROM accountbalance WHERE user_id = ?";
+
+
+            // Fetch the current balance
+            double currentBalance = 0.0;
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+                selectStmt.setInt(1, userId);
+                ResultSet rs = selectStmt.executeQuery();
+
+                if (rs.next()) {
+                    currentBalance = rs.getDouble("balance");
+                } else {
+                    System.out.println("No account found for user_id: " + userId);
+                }
+
+                if (savingStatus){
+                    savingBalance(userId,(amountToAdd*percentage/100));
+                    return currentBalance + (amountToAdd*((100-percentage)/100));
+                }else{
+                    return currentBalance + amountToAdd;
+                }
+            }catch (SQLException e) {
+            System.out.println("Error updating balance: " + e.getMessage());
+            return currentBalance;  
+
+            }
+        }
+    
         
+        public static void updateBalance(int userId, double newBalance){
+          String updateSql = "UPDATE accountbalance SET balance = ? WHERE user_id = ?";
+
+            try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+                updateStmt.setDouble(1, newBalance);
+                updateStmt.setInt(2, userId);
+                updateStmt.executeUpdate();
+            
+            }catch(SQLException e){
+            System.out.println("Error updating balance: " + e.getMessage());
+            }
+        }
+    
+
+    //Update the balance for credit operation
+    public static double creditBalance(int userId, double amountToMinus) {
+        String selectSql = "SELECT balance FROM accountbalance WHERE user_id = ?";
         double currentBalance = 0.0;
         try {
             // Fetch the current balance
@@ -109,61 +157,15 @@ public class AccountBalance {
                 } else {
                     System.out.println("No account found for user_id: " + userId);
                 }
-                if (savingStatus){
-                    savingBalance(userId,(amountToAdd*percentage/100));
-                    return currentBalance + (amountToAdd*((100-percentage)/100));
-                }else{
-                    return currentBalance + amountToAdd;
-                }
+                return currentBalance - amountToMinus;
             }
         }catch (SQLException e) {
             System.out.println("Error updating balance: " + e.getMessage());
-            return currentBalance;  
-            }
 
-}
-    public static void updateBalance(int userId, double amount) {
-            String updateSql = "UPDATE accountbalance SET balance = ? WHERE user_id = ?";
-            // Calculate the new balance
-            
-
-            // Update the balance
-            try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
-                updateStmt.setDouble(1, amount);
-                updateStmt.setInt(2, userId);
-                updateStmt.executeUpdate();
-            }
-         catch (SQLException e) {
-            System.out.println("Error updating balance: " + e.getMessage());
-        }
-    }
-    
-
-    //Update the balance for credit operation
-        public static double creditBalance(int userId, double amountToAdd) {
-        String selectSql = "SELECT balance FROM accountbalance WHERE user_id = ?";
         
-        double currentBalance = 0.0;
-
-            
-            try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
-                selectStmt.setInt(1, userId);
-                ResultSet rs = selectStmt.executeQuery();
-
-                if (rs.next()) {
-                    currentBalance = rs.getDouble("balance");
-                    return currentBalance - amountToAdd;
-                } else {
-                    System.out.println("No account found for user_id: " + userId);
-                    return currentBalance;
-                }
-                
-            
-        }catch (SQLException e) {
-            System.out.println("Error updating balance: " + e.getMessage());
-            return currentBalance;  
-            }
         }
+        return currentBalance;
+    }
         
         public static void savingBalance(int userId, double amount) {
         String selectSql = "UPDATE accountbalance SET savings =? WHERE user_id = ?";
@@ -184,5 +186,6 @@ public class AccountBalance {
             
             }
 }
+
 
 }
