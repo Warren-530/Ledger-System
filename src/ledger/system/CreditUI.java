@@ -120,7 +120,7 @@ public class CreditUI {
                         TransactionUI.balance=balance;
                         TransactionUI.WindowStatus=false;
                         TransactionUI.frame.dispose();
-                        TransactionUI.main(null);
+                        new TransactionUI();
                         frame.dispose();
                         break;
                     }
