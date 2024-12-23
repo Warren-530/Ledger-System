@@ -37,7 +37,7 @@ public class CreditLoan{
 
     public static void applyLoan(int userId, double principal, int month, double interest, int period, double payment){
         String isLoan = LoansTable.getStatus(userId);
-
+        
         if(isLoan.equals("false")){
             status = "Unpaid";
             
