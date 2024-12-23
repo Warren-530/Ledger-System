@@ -152,7 +152,7 @@ public class LedgerSystem {
                     Savings.saving(userId); // calling saving method
                 }
                 case 5 -> {
-                    CreditLoan.creditLoan(balance); // calling creditLoan method
+                    CreditLoan.creditLoan(userId); // calling creditLoan method
                 }
                 case 6 ->{
                     DepositInterestPredictor.calculateInterest(balance); // calling calculateInterest method
@@ -164,9 +164,9 @@ public class LedgerSystem {
             }
             
             System.out.println("\n");//new line
-
+            
         }
-
+        sc.close();
     }
 
 }

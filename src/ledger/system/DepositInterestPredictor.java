@@ -24,7 +24,7 @@ public class DepositInterestPredictor {
         if (choice >= 1 && choice <= 6){
             predictor = balance * rate[choice-1];
 
-            System.out.printf("\nYour daily interest is: %.2f\n", predictor/(12*30));
+            System.out.printf("\nYour daily interest is: %.2f\n", predictor/365);
             System.out.printf("Your monthly interest is: %.2f\n", predictor/12);
             System.out.printf("Your anually interest is: %.2f\n", predictor);
         }else{
