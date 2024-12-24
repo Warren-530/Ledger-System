@@ -33,7 +33,7 @@ public class DepositUI {
     JButton AmBank;
     JButton Standard;
     JButton Calculate;
-    private int Period=356;
+    private int Period=365;
     public DepositUI(){
         DatabaseConnector dbcon = new DatabaseConnector();
         
