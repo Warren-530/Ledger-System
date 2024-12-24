@@ -70,7 +70,7 @@ public class CreditLoan{
         }
         else{
             // Notification box liyik part thank you paiseh
-            System.out.println("Please pay the total loan first!");
+            System.out.println("Please pay the current total loan first!");
         }
     }
 

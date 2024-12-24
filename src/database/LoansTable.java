@@ -65,7 +65,7 @@ public class LoansTable {
 
             // Check if a row is returned
             if (rs.next()) {
-                // Return the balance
+                // Return the principal amount
                 return rs.getDouble("principal_amount");
             } else {
                 return 0.00;
@@ -78,7 +78,7 @@ public class LoansTable {
 
     // method to get status
     public static String getStatus(int userId) {
-        String sql = "SELECT status FROM loans WHERE user_id = ?";
+        String sql = "SELECT status FROM loans WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
 
@@ -86,7 +86,7 @@ public class LoansTable {
 
             // Check if a row is returned
             if (rs.next()) {
-                // Return the balance
+                // Return the status
                 return rs.getString("status");
             } else {
                 return "false";
@@ -107,7 +107,7 @@ public class LoansTable {
 
             // Check if a row is returned
             if (rs.next()) {
-                // Return the balance
+                // Return the outstanding balance
                 return rs.getDouble("outstanding_balance");
             } else {
                 return 0.00;
@@ -128,7 +128,7 @@ public class LoansTable {
 
             // Check if a row is returned
             if (rs.next()) {
-                // Return the balance
+                // Return the created_at
                 return rs.getTimestamp("created_at");
             } else {
                 // testing there's a tracking history or not
