@@ -30,9 +30,7 @@ import javax.swing.table.TableColumn;
 public class HistoryUI {
 static JFrame frame;
 static JTable table;
-    /**
-     * @param args the command line arguments
-     */
+
     public HistoryUI(){
         DatabaseConnector dbcon = new DatabaseConnector();
         
@@ -85,7 +83,7 @@ static JTable table;
         table.setModel(new MyTableModel(data,columnName));
         table.setDefaultRenderer(Object.class,new MultiLineCellRenderer());
 
-        TableColumn column=null;
+        TableColumn column;
         for(int i=0;i<5;i++){
             column=table.getColumnModel().getColumn(i);
             switch (i) {

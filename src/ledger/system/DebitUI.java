@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import java.time.LocalDate;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -112,7 +113,7 @@ public class DebitUI {
                     }else{
                         LocalDate date=LocalDate.now();
 
-                        balance=AccountBalance.debitBalance(MyFrame.userId, Double.parseDouble(amountCheck),TransactionUI.savingStatus,TransactionUI.percent);//update the balance of user in account_balance table
+                        balance=AccountBalance.debitBalance(MyFrame.userId, Double.parseDouble(amountCheck),TransactionUI.savingStatus,TransactionUI.percentage);//update the balance of user in account_balance table
                         AccountBalance.updateBalance(MyFrame.userId,balance);
                         TransactionsTable.insertTransaction(MyFrame.userId, "Debit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
 
@@ -157,7 +158,6 @@ public class DebitUI {
             int close=JOptionPane.showConfirmDialog(null,"Do you want to cancel this transaction?","Transaction cancellation",JOptionPane.YES_NO_OPTION);
             if (close==0){
                 TransactionUI.WindowStatus=false;
-                TransactionUI.account.setText("<html>Account Balance :<br>"+balance+"</html>");
                 frame.dispose();
             }
         }

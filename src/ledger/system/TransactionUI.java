@@ -7,11 +7,9 @@ package ledger.system;
 import database.AccountBalance;
 import database.DatabaseConnector;
 import database.TransactionsTable;
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
+import database.LoansTable;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,10 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -49,9 +44,12 @@ static JButton exit;
 static boolean WindowStatus=false;
 static double balance;
 static boolean savingStatus;
+static String loanStatus;
 static int activate;
 static String percentageS;
 static double percentage;
+static String loanAmountS;
+static double loanAmount;
 
     public static void main(String args[]) {
         DatabaseConnector dbcon = new DatabaseConnector();
@@ -199,7 +197,14 @@ static double percentage;
             }
             
         });
-        
+        loanStatus=LoansTable.getStatus(MyFrame.userId);
+        if (loanStatus.equals("unpaid")){
+            if (CreditLoan.isOverdue(MyFrame.userId)){
+                debit.setEnabled(false);
+                credit.setEnabled(false);
+            }
+        }
+
         creditLoan.setBounds(900,350,300,100);
         creditLoan.setBackground(new Color(12,35,89));
         creditLoan.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -211,8 +216,20 @@ static double percentage;
                 if (WindowStatus){
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
-                    WindowStatus=true;
-                    DebitUI.main(null);
+                    WindowStatus=true; 
+                    if (loanStatus.equals("paid")||loanStatus.equals("false")){
+                        int loanActive=JOptionPane.showConfirmDialog(null,"You have not apply any credit loan. Do you want to apply one?.","Credit Loan Application",JOptionPane.YES_NO_OPTION);
+                            if (loanActive==0){
+                                LoanUI loanUI=new LoanUI();
+                            }
+                                frame.dispose();
+                                frame.setVisible(true);
+                                savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
+                                
+                            
+                            
+                        
+                    }
                 }
                 }
             
