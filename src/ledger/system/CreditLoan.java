@@ -3,6 +3,7 @@ package ledger.system;
 import database.LoansTable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class CreditLoan{
@@ -26,44 +27,50 @@ public class CreditLoan{
         int option = sc.nextInt();
 
         if(option == 1){
-            applyLoan(userId, principal, month, interest, period, payment);
+            applyLoan(userId, principal, month, interest, period);
             
         }else if(option == 2){
-            repayLoan(userId);
+            repayLoan(userId, payment);
         }else{
             System.out.println("Invalid choice! Please enter the choice from 1 and 2 only.");
         }
     }
 
-    public static void applyLoan(int userId, double principal, int month, double interest, int period, double payment){
+    public static void applyLoan(int userId, double principal, int month, double interest, int period){
         String isLoan = LoansTable.getStatus(userId);
         
         if(isLoan.equals("false")){
             status = "Unpaid";
-            
-            interest /= (12 * 100);
 
             // monthly installment
-            double month_installment = (principal * interest * Math.pow(1.0 + interest, month)) / (Math.pow(1.0 + interest, month) - 1.0);                
+            double month_installment = calculateMonthlyInstallment(principal, month, interest);                
             
             // schedule?
             System.out.printf("You are advised to pay RM%.2f each month\n", month_installment);
             
             // total amount have to pay
-            double total_loan = (month_installment) * month;
+            double total_loan = calculateLoan(month_installment, month);
 
             System.out.printf("You will have to pay RM%.2f in total\n", total_loan);
 
-            
             //insert sql
             LoansTable.insertLoan(userId, principal, interest, period, total_loan, status);
 
-            // System.out.print("Enter a period for loan balance: ");
+            // System.out.print("Enter a period (in month) for loan balance: ");
 
             // Periodic loan
-            double period_loan = period * month_installment;
+            double period_loan = calculateLoan(month_installment, period);
 
             System.out.printf("The periodic payment is: %.2f\n",period_loan);
+
+            // Calculate due date
+            Timestamp dueDate = getDueDate(userId);
+
+            // Format dueDate
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedDueDate = dueDate.toLocalDateTime().format(formatter);
+
+            System.out.println("Due Date: " + formattedDueDate);
 
         }else if(isLoan.equals(null)){
             System.out.println("There is an error fetching status!");
@@ -74,7 +81,7 @@ public class CreditLoan{
         }
     }
 
-    public static void repayLoan(int userId){
+    public static void repayLoan(int userId, double payment){
         
         // System.out.print("Please enter the amount of payment: ");
         total_loan = LoansTable.getLoan(userId);
@@ -96,19 +103,56 @@ public class CreditLoan{
 
     }
 
+    public static double calculateMonthlyInstallment(double principal, int month, double interest){
+        interest /= (12 * 100);
+        double result = (principal * interest * Math.pow(1.0 + interest, month)) / (Math.pow(1.0 + interest, month) - 1.0);
+
+        return result;
+    }
+
+    // Calculate total loan and periodic loan function
+    public static double calculateLoan(double month_installment, int month){
+        return (month_installment) * month;
+    }
+
+    public static LocalDateTime calculateDueDate(int userId){
+        
+        try {
+            createdAt = LoansTable.getCreateAt(userId);
+            period = LoansTable.getPeriod(userId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Creation date or period is null for userId: " + userId);
+        }
+        
+        return createdAt.toLocalDateTime().plusMonths(period);
+    }
+
+    public static Timestamp getDueDate(int userId){
+        try {
+            LocalDateTime dueDate = calculateDueDate(userId);
+            return Timestamp.valueOf(dueDate);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error calculating due date: " + e.getMessage());
+            return null; 
+        }
+    }
+
     public static boolean isOverdue(int userId){
-        total_loan = LoansTable.getLoan(userId);
-        createdAt = LoansTable.getCreateAt(userId);
-        period = LoansTable.getPeriod(userId);
+        
+        try {
+            LocalDateTime dueDate = calculateDueDate(userId);
 
-        LocalDateTime dueDate = createdAt.toLocalDateTime().plusMonths(period);
+            // Check if the current date is after the due date && the loan is not fully paid
+            if (LocalDateTime.now().isAfter(dueDate) && !status.equals("paid") && total_loan > 0) {
+                return true;
+            } else { // createdAt == null
+                System.out.println("No loan found for the user.");
+                return false;
+            }
 
-        // Check if the current date is after the due date && the loan is not fully paid
-        if (LocalDateTime.now().isAfter(dueDate) && !status.equals("paid") && total_loan > 0) {
-            return true;
-        } else { // createdAt == null
-            System.out.println("No loan found for the user.");
-            return false;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error fetching due date: " + e.getMessage());
+            return false; 
         }
     }
 

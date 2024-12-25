@@ -45,7 +45,7 @@ public class Transactions {
 
         boolean overdue = CreditLoan.isOverdue(userId);
 
-    if(!overdue){
+        if(!overdue){
             LocalDate date = LocalDate.now();
             System.out.println("== Credit ==");
             System.out.print("Enter amount: ");
