@@ -84,44 +84,7 @@ public class LoanUI {
             next.setBackground(new Color(75,75,128));
             next.setForeground(Color.white);
             next.setFocusable(false);
-            next.addActionListener((ActionEvent e)->{
-                if (e.getSource()==next){
-                    String amountCheck=amount.getText();
-                    String interestCheck=interestValue.getText();
-                    String timeCheck=
-                    while (true){
-                        if (amountCheck.trim().equals("")){
-                            JOptionPane.showMessageDialog(null,"Please enter an amount for loan principal.", "Error",JOptionPane.INFORMATION_MESSAGE);
-                            break;
-                        }
-                        else if (DebitUI.ifAmountNotValid(amountCheck)){
-                            JOptionPane.showMessageDialog(null,"Please enter an VALID amount for loan principal.", "Error",JOptionPane.INFORMATION_MESSAGE);
-                            break;
-                        }
-                        else if (interestCheck.trim().equals("")){
-                            JOptionPane.showMessageDialog(null,"Please enter an interest rate", "Error",JOptionPane.INFORMATION_MESSAGE);
-                            break;
-                        }else if (DebitUI.ifAmountNotValid(interestCheck)){
-                            JOptionPane.showMessageDialog(null,"Please enter a VALID interest rate", "Error",JOptionPane.INFORMATION_MESSAGE);
-                            break;
-                        }
-                        else{
-                            LocalDate date=LocalDate.now();
-                            balance=AccountBalance.creditBalance(MyFrame.userId, Double.parseDouble(amountCheck));//update the balance of user in account_balance table
-                            AccountBalance.updateBalance(MyFrame.userId, balance);
-                            TransactionsTable.insertTransaction(MyFrame.userId, "Credit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
-                            balance =AccountBalance.getBalance(MyFrame.userId);
-                            JOptionPane.showMessageDialog(null,"Credit transaction successfully recorded. Current balance is "+balance, "Transaction completed",JOptionPane.PLAIN_MESSAGE);
-                            TransactionUI.balance=balance;
-                            TransactionUI.WindowStatus=false;
-                            TransactionUI.frame.dispose();
-                            new TransactionUI();
-                            frame.dispose();
-                            break;
-                        }
-                    }
-                }
-            });
+            
 
             JLayeredPane layer=new JLayeredPane();
             layer.setLayout(null);
@@ -145,7 +108,46 @@ public class LoanUI {
             frame.setLayout(null);
             frame.add(layer);
             frame.setLocationRelativeTo(null);
-
+            
+            next.addActionListener((ActionEvent e)->{
+                if (e.getSource()==next){
+                    String amountCheck=amount.getText();
+                    String interestCheck=interestValue.getText();
+                    String timeCheck=period.getText();
+                    int date=1;
+                    
+                        if (amountCheck.trim().equals("")){
+                            JOptionPane.showMessageDialog(null,"Please enter an amount for loan principal.", "Error",JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        else if (DebitUI.ifAmountNotValid(amountCheck)){
+                            JOptionPane.showMessageDialog(null,"Please enter an VALID amount for loan principal.", "Error",JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        else if (interestCheck.trim().equals("")){
+                            JOptionPane.showMessageDialog(null,"Please enter an interest rate", "Error",JOptionPane.INFORMATION_MESSAGE);
+                        }else if (DebitUI.ifAmountNotValid(interestCheck)||Double.parseDouble(interestCheck)>100){
+                            JOptionPane.showMessageDialog(null,"Please enter a VALID interest rate", "Error",JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        else if(timeCheck.trim().equals("")){
+                            JOptionPane.showMessageDialog(null,"Please enter for period.", "Error",JOptionPane.INFORMATION_MESSAGE);
+                        }else{
+                            try{
+                                date=Integer.parseInt(timeCheck);
+                                if (date<=0){
+                                    JOptionPane.showMessageDialog(null,"Please enter a VALID month", "Error",JOptionPane.INFORMATION_MESSAGE);
+                                    
+                                }
+                            }catch (NumberFormatException a){
+                                JOptionPane.showMessageDialog(null,"Please enter a VALID month", "Error",JOptionPane.ERROR_MESSAGE);
+                                
+                            }
+                            LoanApply loanApply = new LoanApply(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date);
+                            frame.dispose();
+                            
+                        
+                    }
+                }
+            });
+            
             frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we){

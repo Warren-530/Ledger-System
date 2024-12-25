@@ -182,6 +182,9 @@ static double loanAmount;
                                 if (percentage>100){
                                     JOptionPane.showMessageDialog(null,"Percentage entered cannot exceed 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
                                     continue;
+                                }else if (percentage<=0){
+                                    JOptionPane.showMessageDialog(null,"Percentage entered cannot lower than 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
+                                    continue;
                                 }
                             TransactionsTable.updateSaving(MyFrame.userId,true,percentage);
                             JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
@@ -222,13 +225,8 @@ static double loanAmount;
                             if (loanActive==0){
                                 LoanUI loanUI=new LoanUI();
                             }
-                                frame.dispose();
-                                frame.setVisible(true);
-                                savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
-                                
-                            
-                            
-                        
+                    }else if (loanStatus.equals("unpaid")){
+                        LoanRepay loanRepay=new LoanRepay();
                     }
                 }
                 }
