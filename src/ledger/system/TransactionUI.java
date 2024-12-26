@@ -201,7 +201,7 @@ static double loanAmount;
             
         });
         loanStatus=LoansTable.getStatus(MyFrame.userId);
-        if (loanStatus.equals("unpaid")){
+        if (loanStatus.equals("Unpaid")){
             if (CreditLoan.isOverdue(MyFrame.userId)){
                 debit.setEnabled(false);
                 credit.setEnabled(false);
@@ -220,7 +220,7 @@ static double loanAmount;
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
                     
-                    if (loanStatus.equals("paid")||loanStatus.equals("false")){
+                    if (loanStatus.equals("Paid")||loanStatus.equals("false")){
                         int loanActive=JOptionPane.showConfirmDialog(null,"You have not apply any credit loan. Do you want to apply one?.","Credit Loan Application",JOptionPane.YES_NO_OPTION);
                             if (loanActive==0){
                                 WindowStatus=true; 
