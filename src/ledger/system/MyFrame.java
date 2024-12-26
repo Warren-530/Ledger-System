@@ -140,7 +140,7 @@ public class MyFrame extends JFrame{
                             userId = UserTable.getUserId(email);
                             JOptionPane.showMessageDialog(null,"You have login successfully!Welcome to Ledger System!","Login Success",JOptionPane.INFORMATION_MESSAGE);
                             frame.dispose();
-                            TransactionUI.main(null);
+                            new TransactionUI();
                             break;
                         }
                     } catch (SQLException ex) {

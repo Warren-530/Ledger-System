@@ -5,10 +5,13 @@
 package ledger.system;
 
 import database.DatabaseConnector;
+import database.AccountBalance;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -60,7 +63,7 @@ public class DepositUI {
         select.setFont(new Font("Consolas",Font.BOLD,20));
         select.setForeground(Color.white);
         
-        JLabel bank=new JLabel("Bank            Interest rate");
+        JLabel bank=new JLabel("Bank            Interest rate(%)");
         bank.setBounds(50,103,500,40);
         bank.setFont(new Font("Consolas",Font.BOLD,20));
        
@@ -214,20 +217,30 @@ public class DepositUI {
             JFrame frame=new JFrame();
             frame.setLayout(null);
             frame.setBounds(0,0,720,480);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             frame.setResizable(false);
             frame.setLocationRelativeTo(null);
             frame.add(layer);
             frame.setVisible(true);
-
+            
+            frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we){
+                int close=JOptionPane.showConfirmDialog(null,"Do you want to cancel this transaction?","Transaction cancellation",JOptionPane.YES_NO_OPTION);
+                if (close==0){
+                    TransactionUI.WindowStatus=false;
+                    frame.dispose();
+                }
+                }
+            });
+        }
     
-    }
+                    
     private double selectedInterest;
     private ActionListener button(double interest){
         return e->{
             selectedInterest=interest;
             resetBorders();
-            System.out.println(interest);
             JButton clicked=(JButton)e.getSource();
             clicked.setBorder(BorderFactory.createBevelBorder(1));
         };
@@ -241,11 +254,12 @@ public class DepositUI {
         AmBank.setBorder(BorderFactory.createBevelBorder(0));
         Standard.setBorder(BorderFactory.createBevelBorder(0));
     }
+    private final double balance=AccountBalance.getBalance(MyFrame.userId);
     private double answer;
     private ActionListener cal(){
         DecimalFormat df = new DecimalFormat("0.00");
         return e->{
-            answer=(10000*selectedInterest/100)/Period;
+            answer=(balance*selectedInterest/100)/Period;
             String format=df.format(answer);
             if (selectedInterest==0){
                 JOptionPane.showMessageDialog(null,"Please select a bank","Bank not selected",JOptionPane.ERROR_MESSAGE);

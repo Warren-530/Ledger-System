@@ -4,15 +4,13 @@
  */
 package ledger.system;
 
-import database.AccountBalance;
 import database.DatabaseConnector;
-import database.TransactionsTable;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,7 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
@@ -30,6 +27,9 @@ import javax.swing.border.BevelBorder;
  * @author Liyik
  */
 public class LoanUI {
+            private double totalLoan;
+            private double monthly;
+            private LocalDateTime dueDate=LocalDateTime.now();
     public LoanUI(){
         DatabaseConnector dbcon = new DatabaseConnector();
 
@@ -109,6 +109,7 @@ public class LoanUI {
             frame.add(layer);
             frame.setLocationRelativeTo(null);
             
+
             next.addActionListener((ActionEvent e)->{
                 if (e.getSource()==next){
                     String amountCheck=amount.getText();
@@ -136,12 +137,17 @@ public class LoanUI {
                                     JOptionPane.showMessageDialog(null,"Please enter a VALID month", "Error",JOptionPane.INFORMATION_MESSAGE);
                                     
                                 }
+                                monthly=CreditLoan.calculateMonthlyInstallment(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date);
+                                totalLoan=CreditLoan.calculateLoan(monthly,date);
+                                dueDate=dueDate.plusMonths(date);
+                                dueDate=dueDate.withHour(0).withSecond(0).withNano(0);
+                                LoanApply loanApply = new LoanApply(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date, dueDate,totalLoan,monthly);
+                                frame.dispose();
                             }catch (NumberFormatException a){
                                 JOptionPane.showMessageDialog(null,"Please enter a VALID month", "Error",JOptionPane.ERROR_MESSAGE);
                                 
                             }
-                            LoanApply loanApply = new LoanApply(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date);
-                            frame.dispose();
+                            
                             
                         
                     }

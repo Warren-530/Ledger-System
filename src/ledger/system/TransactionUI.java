@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.border.BevelBorder;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
@@ -51,7 +50,7 @@ static double percentage;
 static String loanAmountS;
 static double loanAmount;
 
-    public static void main(String args[]) {
+    public TransactionUI() {
         DatabaseConnector dbcon = new DatabaseConnector();
         debit=new JButton("DEBIT");
         credit=new JButton("CREDIT");
@@ -172,28 +171,29 @@ static double loanAmount;
                     }
                 }else{
                     activate=JOptionPane.showConfirmDialog(null,"Your saving is inactive. Do you want to activate it?","Saving activation",JOptionPane.YES_NO_OPTION);
-                    //activate saving, enter percentage
-                    while(true){
-                        percentageS=JOptionPane.showInputDialog(null,"Please enter the percentage you wish to deduct from your next debit: ","Saving Percentage",JOptionPane.PLAIN_MESSAGE);
-                        try{
-                            if (percentageS==null)
-                                break;
-                            percentage=Double.parseDouble(percentageS);
-                                if (percentage>100){
-                                    JOptionPane.showMessageDialog(null,"Percentage entered cannot exceed 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
-                                    continue;
-                                }else if (percentage<=0){
-                                    JOptionPane.showMessageDialog(null,"Percentage entered cannot lower than 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
+                    if (activate==0){
+                        while(true){
+                            percentageS=JOptionPane.showInputDialog(null,"Please enter the percentage you wish to deduct from your next debit: ","Saving Percentage",JOptionPane.PLAIN_MESSAGE);
+                                if (percentageS==null)
+                                    break;
+                                else if(DebitUI.ifAmountNotValid(percentageS)){
+                                    JOptionPane.showMessageDialog(null,"Please enter the valid input for percentage.","Invalid value",JOptionPane.ERROR_MESSAGE);
                                     continue;
                                 }
-                            TransactionsTable.updateSaving(MyFrame.userId,true,percentage);
-                            JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
-                            frame.dispose();
-                            frame.setVisible(true);
-                            savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
-                            break;
-                        }catch (NumberFormatException a){
-                            JOptionPane.showMessageDialog(null,"Please enter the valid input for percentage.","Invalid value",JOptionPane.ERROR_MESSAGE);
+                                percentage=Double.parseDouble(percentageS);
+                                    if (percentage>100){
+                                        JOptionPane.showMessageDialog(null,"Percentage entered cannot exceed 100.","Saving Activation",JOptionPane.ERROR_MESSAGE);
+                                        continue;
+                                    }else if (percentage==0){
+                                        JOptionPane.showMessageDialog(null,"Percentage entered cannot equal to 0.","Saving Activation",JOptionPane.ERROR_MESSAGE);
+                                        continue;
+                                    }
+                                TransactionsTable.updateSaving(MyFrame.userId,true,percentage);
+                                JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
+                                frame.dispose();
+                                frame.setVisible(true);
+                                savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
+                                break;
                         }
                     }
                 }
@@ -219,13 +219,14 @@ static double loanAmount;
                 if (WindowStatus){
                     JOptionPane.showMessageDialog(null,"Please complete or exit the ongoing transaction process before other transactions.","Transaction ongoing",JOptionPane.ERROR_MESSAGE);
                 }else{
-                    WindowStatus=true; 
+                    
                     if (loanStatus.equals("paid")||loanStatus.equals("false")){
                         int loanActive=JOptionPane.showConfirmDialog(null,"You have not apply any credit loan. Do you want to apply one?.","Credit Loan Application",JOptionPane.YES_NO_OPTION);
                             if (loanActive==0){
+                                WindowStatus=true; 
                                 LoanUI loanUI=new LoanUI();
                             }
-                    }else if (loanStatus.equals("unpaid")){
+                    }else if (loanStatus.equals("Unpaid")){
                         LoanRepay loanRepay=new LoanRepay();
                     }
                 }
