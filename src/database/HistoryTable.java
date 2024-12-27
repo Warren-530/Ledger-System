@@ -14,7 +14,7 @@ import ledger.system.MyFrame;
  *
  * @author Liyik
  */
-public class HistoryValue {
+public class HistoryTable {
     public static Connection connection = getConnection();
     public static void getHistory(int userId, Object[][] history){
         

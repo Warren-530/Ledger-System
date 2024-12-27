@@ -226,11 +226,9 @@ public class DepositUI {
             frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we){
-                int close=JOptionPane.showConfirmDialog(null,"Do you want to cancel this transaction?","Transaction cancellation",JOptionPane.YES_NO_OPTION);
-                if (close==0){
                     TransactionUI.WindowStatus=false;
                     frame.dispose();
-                }
+                
                 }
             });
         }

@@ -110,6 +110,9 @@ public class CreditUI {
                     if (refCheck.trim().equals("")){
                         JOptionPane.showMessageDialog(null,"Please enter a description for references", "Transaction failed",JOptionPane.INFORMATION_MESSAGE);
                         break;
+                    }else if (Double.parseDouble(amountCheck)>balance){
+                        JOptionPane.showMessageDialog(null,"Credit amount cannot more than account balance.", "Transaction failed",JOptionPane.INFORMATION_MESSAGE);
+                        break;
                     }else{
                         LocalDate date=LocalDate.now();
                         balance=AccountBalance.creditBalance(MyFrame.userId, Double.parseDouble(amountCheck));//update the balance of user in account_balance table
