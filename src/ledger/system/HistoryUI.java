@@ -134,6 +134,7 @@ static JTextField maxAmount;
         byDate.setBounds(585,45,100,20);
         byDate.setBackground(new Color(56,36,128));
         byDate.setForeground(Color.white);
+        byDate.setSelected(true);
         byAmount=new JRadioButton("Sort by amount");
         byAmount.setBounds(585,65,150,20);
         byAmount.setBackground(new Color(56,36,128));
@@ -145,6 +146,7 @@ static JTextField maxAmount;
         
         button.add(byDate);
         button.add(byAmount);
+            
         
         
         
