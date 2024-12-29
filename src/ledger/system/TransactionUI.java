@@ -90,7 +90,7 @@ static double loanAmount;
         accSaving.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         accSaving.setBounds(50,300,300,75);
         
-        double LoanBalance=0;//AcountBalance.getLoan(MyFrame.userId);
+        double LoanBalance=AccountBalance.getLoan(MyFrame.userId);
         JLabel accLoan=new JLabel();
         accLoan.setText("<html>Loan :<br>"+LoanBalance+"</html>");
         accLoan.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));

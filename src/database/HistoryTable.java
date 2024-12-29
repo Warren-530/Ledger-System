@@ -70,16 +70,16 @@ public class HistoryTable {
 
         // Add Filtering Conditions Based on filterIndex
         switch (filterIndex) {
-            case 0: // Filter by Date
+            case 2: // Filter by Date
                 sql.append(" AND date BETWEEN ? AND ?");
                 parameters.add(new java.sql.Date(startDate.getTime()));
                 parameters.add(new java.sql.Date(endDate.getTime()));
                 break;
-            case 1: // Filter by Transaction Type
+            case 4: // Filter by Transaction Type
                 sql.append(" AND transaction_type = ?");
                 parameters.add(transactionType); // "Debit" or "Credit"
                 break;
-            case 2: // Filter by Amount Range
+            case 5: // Filter by Amount Range
                 sql.append(" AND amount BETWEEN ? AND ?");
                 parameters.add(minAmount);
                 parameters.add(maxAmount);

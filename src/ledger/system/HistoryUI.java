@@ -15,12 +15,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Date;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -43,11 +47,21 @@ static JDateChooser between2;
 static JDateChooser after;
 static JRadioButton byDate;
 static JRadioButton byAmount;
-static int sortingIndex;
 static JComboBox type;
 static JTextField minAmount;
 static JTextField maxAmount;
+static JLabel from;
+static JLabel to;
+static JCheckBox sort;
+static Object[][] data;
+static int filterIndex, sortingIndex;
+static Date startDate,endDate,beforeDate,afterDate,onDate;
+static double minAm,maxAm;
+static String sortOrder,transactionType,minAms,maxAms;
+static boolean isSorting=false;
     public HistoryUI(){
+        ImageIcon ascending=new ImageIcon("ascending.png");
+        ImageIcon descending=new ImageIcon("descending.png");
         DatabaseConnector dbcon = new DatabaseConnector();
         
         JPanel Header=new JPanel();
@@ -58,13 +72,16 @@ static JTextField maxAmount;
         body.setBounds(0,100,720,380);
         body.setBackground(new Color(240,240,240));
         
-        JLabel title=new JLabel("Transaction History");
-        title.setFont(new Font("Algerian",Font.BOLD,25));
-        title.setBounds(30,50,600,50);
+        JLabel title=new JLabel("<html>Transaction <br>History</html>");
+        title.setFont(new Font("Algerian",Font.BOLD,22));
+        title.setBounds(30,0,600,100);
         title.setForeground(Color.white);
         int rowcount=0;
-        Object[][] data=new Object[HistoryTable.getRowCount(MyFrame.userId, rowcount)][5];
-        HistoryTable.getHistory(MyFrame.userId,data);
+        data=new Object[HistoryTable.getRowCount(MyFrame.userId, rowcount)][5];
+        if (!isSorting){
+            HistoryTable.getHistory(MyFrame.userId,data);
+        }
+         
         
         
         JButton export=new JButton("Export");
@@ -78,15 +95,27 @@ static JTextField maxAmount;
         });
         
         JButton filter=new JButton("Filter");
-        filter.setBounds(350,60,100,30);
+        filter.setBounds(600,60,100,30);
         filter.setFocusable(false);
         
         sortingIndex=0;
         String []columnName={"Date","Description","Debit","Credit","Balance"};
         String[]range={"Date","Before","Between","After","Type","Amount"};
         JComboBox comboBox=new JComboBox(range);
-        comboBox.setBounds(350,30,100,25);
+        comboBox.setBounds(250,10,100,25);
         String []transType={"Credit","Debit"};
+        
+        from=new JLabel("From");
+        from.setBounds(420,10,100,30);
+        from.setForeground(Color.white);
+        from.setVisible(false);
+        from.setFont(new Font("Consolas",Font.BOLD,12));
+        to=new JLabel("to");
+        to.setBounds(420,50,100,30);
+        to.setForeground(Color.white);
+        to.setVisible(false);
+        to.setFont(new Font("Consolas",Font.BOLD,12));
+        
         
         minAmount=new JTextField();
         minAmount.setBounds(470,10,100,30);
@@ -131,16 +160,23 @@ static JTextField maxAmount;
         
         
         byDate=new JRadioButton("Sort by date");
-        byDate.setBounds(585,45,100,20);
+        byDate.setBounds(250,45,100,20);
         byDate.setBackground(new Color(56,36,128));
         byDate.setForeground(Color.white);
         byDate.setSelected(true);
         byAmount=new JRadioButton("Sort by amount");
-        byAmount.setBounds(585,65,150,20);
+        byAmount.setBounds(250,65,150,20);
         byAmount.setBackground(new Color(56,36,128));
         byAmount.setForeground(Color.white);
         byDate.addActionListener(this::sorting);
         byAmount.addActionListener(this::sorting);
+        
+        sort=new JCheckBox();
+        sort.setBounds(370,45,25,25);
+        sort.setIcon(ascending);
+        sort.setSelectedIcon(descending);
+        
+
         
         ButtonGroup button=new ButtonGroup();
         
@@ -199,6 +235,9 @@ static JTextField maxAmount;
         layer.add(type, Integer.valueOf(1));
         layer.add(minAmount, Integer.valueOf(1));
         layer.add(maxAmount, Integer.valueOf(1));
+        layer.add(from, Integer.valueOf(1));
+        layer.add(to, Integer.valueOf(1));
+        layer.add(sort, Integer.valueOf(2));
         //table.getTableHeader().setBounds(50,50,520,50);
         //table.setBounds(50,100,520,280);
         
@@ -235,6 +274,8 @@ static JTextField maxAmount;
                   case 2:
                     between1.setVisible(true);
                     between2.setVisible(true);
+                    from.setVisible(true);
+                    to.setVisible(true);
                     break;
                   case 3:
                     after.setVisible(true);
@@ -245,14 +286,82 @@ static JTextField maxAmount;
                   case 5:
                     minAmount.setVisible(true);
                     maxAmount.setVisible(true);
+                    from.setVisible(true);
+                    to.setVisible(true);
                     break;
               }
           }
         });
         filter.addActionListener((ActionEvent e)->{
+            
             if (e.getSource()==filter){
+                startDate=null;endDate=null; beforeDate=null;afterDate=null;onDate=null;
+                minAm=0;maxAm=0;
+                sortOrder=null;transactionType=null;
+                filterIndex=comboBox.getSelectedIndex();
+                switch(comboBox.getSelectedIndex()){
+                    case 0:
+                        try{
+                        onDate=date.getDate();
+                        }catch(NullPointerException ex){
+                            JOptionPane.showMessageDialog(null,"Please enter date", "Not valid date",JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case 1:
+                        try{
+                        beforeDate=before.getDate();
+                        }catch(NullPointerException ex){
+                            JOptionPane.showMessageDialog(null,"Please enter date", "Not valid date",JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case 2:
+                        try{
+                        startDate=between1.getDate();
+                        endDate=between2.getDate();
+                        }catch(NullPointerException ex){
+                            JOptionPane.showMessageDialog(null,"Please enter date", "Not valid date",JOptionPane.ERROR_MESSAGE);
+                        }
+                        
+                        break;
+                    case 3:
+                        try{
+                        afterDate=after.getDate();
+                        }catch(NullPointerException ex){
+                            JOptionPane.showMessageDialog(null,"Please enter date", "Not valid date",JOptionPane.ERROR_MESSAGE);
+                        }
+                        
+                        break;
+                    case 4:
+                        transactionType=String.valueOf(type.getSelectedItem());
+                        System.out.println(transactionType);
+                        break;
+                    case 5:
+                        minAms=minAmount.getText();
+                        maxAms=maxAmount.getText();
+                        if (minAms.trim().equals("")||maxAms.trim().equals("")){
+                            JOptionPane.showMessageDialog(null,"Please enter value for amounts.", "Not valid amount",JOptionPane.ERROR_MESSAGE);
+                        }
+                        else if (DebitUI.ifAmountNotValid(minAms)||DebitUI.ifAmountNotValid(maxAms)){
+                            JOptionPane.showMessageDialog(null,"Please enter valid amounts.", "Not valid amount",JOptionPane.ERROR_MESSAGE);
+                            
+                        }else{
+                            minAm=Double.parseDouble(minAms);
+                            maxAm=Double.parseDouble(maxAms);
+                        }    
+                        break;
+                    }
+
+                if (sort.isSelected()){
+                    sortOrder="DESC";
+                }else{
+                    sortOrder="ASC";
+                }
+                isSorting=true;
+                HistoryTable.getFilteredAndSortedHistory(data, filterIndex, sortingIndex, startDate, endDate, minAm, maxAm, sortOrder, transactionType, MyFrame.userId);
                 frame.dispose();
                 new HistoryUI();
+                
+            
             }
         });
         
@@ -274,6 +383,8 @@ static JTextField maxAmount;
         type.setVisible(false);
         minAmount.setVisible(false);
         maxAmount.setVisible(false);
+        from.setVisible(false);
+        to.setVisible(false);
         
     }
     

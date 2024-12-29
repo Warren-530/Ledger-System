@@ -39,7 +39,7 @@ public class LoansTable {
 
     // update loan must be minus from the total
     public static void updateLoan(int userId, double remaining, String status) {
-        String sql = "UPDATE loans SET outstanding_balance = ?, status = ? WHERE user_id = ?";
+        String sql = "UPDATE loans SET outstanding_balance = ?, status = ? WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {            
             // update values for placeholders
@@ -57,7 +57,7 @@ public class LoansTable {
 
     // method to get the lastest user principal
     public static double getPrincipal(int userId) {
-        String sql = "SELECT principal_amount FROM loans WHERE user_id = ?";
+        String sql = "SELECT principal_amount FROM loans WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
 
@@ -99,7 +99,7 @@ public class LoansTable {
 
     // method to get the lastest loan
     public static double getLoan(int userId) {
-        String sql = "SELECT outstanding_balance FROM loans WHERE user_id = ?";
+        String sql = "SELECT outstanding_balance FROM loans WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
 
