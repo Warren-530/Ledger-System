@@ -11,15 +11,18 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -38,7 +41,12 @@ static JDateChooser before;
 static JDateChooser between1;
 static JDateChooser between2;
 static JDateChooser after;
-
+static JRadioButton byDate;
+static JRadioButton byAmount;
+static int sortingIndex;
+static JComboBox type;
+static JTextField minAmount;
+static JTextField maxAmount;
     public HistoryUI(){
         DatabaseConnector dbcon = new DatabaseConnector();
         
@@ -73,10 +81,27 @@ static JDateChooser after;
         filter.setBounds(350,60,100,30);
         filter.setFocusable(false);
         
+        sortingIndex=0;
         String []columnName={"Date","Description","Debit","Credit","Balance"};
-        String[]range={"Date","Before","Between","After"};
+        String[]range={"Date","Before","Between","After","Type","Amount"};
         JComboBox comboBox=new JComboBox(range);
         comboBox.setBounds(350,30,100,25);
+        String []transType={"Credit","Debit"};
+        
+        minAmount=new JTextField();
+        minAmount.setBounds(470,10,100,30);
+        minAmount.setBackground(new Color(237,237,237));
+        minAmount.setVisible(false);
+        
+        maxAmount=new JTextField();
+        maxAmount.setBounds(470,50,100,30);
+        maxAmount.setBackground(new Color(237,237,237));
+        maxAmount.setVisible(false);
+        
+        type=new JComboBox(transType);
+        type.setBounds(470,30,100,30);
+        type.setBackground(new Color(237,237,237));
+        type.setVisible(false);
         
         date=new JDateChooser();
         date.setBounds(470,30,100,30);
@@ -89,12 +114,12 @@ static JDateChooser after;
         
         
         between1=new JDateChooser();
-        between1.setBounds(470,5,100,30);
+        between1.setBounds(470,10,100,30);
         between1.setBackground(new Color(237,0,237));
         between1.setVisible(false);
         
         between2=new JDateChooser();
-        between2.setBounds(470,45,100,30);
+        between2.setBounds(470,50,100,30);
         between2.setBackground(new Color(237,0,237));
         between2.setVisible(false);
         
@@ -102,6 +127,24 @@ static JDateChooser after;
         after.setBounds(470,30,100,30);
         after.setForeground(Color.red);
         after.setVisible(false);
+        
+        
+        
+        byDate=new JRadioButton("Sort by date");
+        byDate.setBounds(585,45,100,20);
+        byDate.setBackground(new Color(56,36,128));
+        byDate.setForeground(Color.white);
+        byAmount=new JRadioButton("Sort by amount");
+        byAmount.setBounds(585,65,150,20);
+        byAmount.setBackground(new Color(56,36,128));
+        byAmount.setForeground(Color.white);
+        byDate.addActionListener(this::sorting);
+        byAmount.addActionListener(this::sorting);
+        
+        ButtonGroup button=new ButtonGroup();
+        
+        button.add(byDate);
+        button.add(byAmount);
         
         
         
@@ -149,6 +192,11 @@ static JDateChooser after;
         layer.add(between1, Integer.valueOf(1));
         layer.add(between2, Integer.valueOf(1));
         layer.add(after, Integer.valueOf(1));
+        layer.add(byDate, Integer.valueOf(1));
+        layer.add(byAmount, Integer.valueOf(1));
+        layer.add(type, Integer.valueOf(1));
+        layer.add(minAmount, Integer.valueOf(1));
+        layer.add(maxAmount, Integer.valueOf(1));
         //table.getTableHeader().setBounds(50,50,520,50);
         //table.setBounds(50,100,520,280);
         
@@ -189,6 +237,13 @@ static JDateChooser after;
                   case 3:
                     after.setVisible(true);
                     break;
+                  case 4:
+                    type.setVisible(true);
+                    break;
+                  case 5:
+                    minAmount.setVisible(true);
+                    maxAmount.setVisible(true);
+                    break;
               }
           }
         });
@@ -198,7 +253,8 @@ static JDateChooser after;
                 new HistoryUI();
             }
         });
-
+        
+        
     }public static void main(String[]args){
          SwingUtilities.invokeLater(HistoryUI::new);
     }
@@ -213,5 +269,17 @@ static JDateChooser after;
         between1.setVisible(false);
         between2.setVisible(false);
         after.setVisible(false);
+        type.setVisible(false);
+        minAmount.setVisible(false);
+        maxAmount.setVisible(false);
+        
+    }
+    
+    private void sorting(ActionEvent e){
+        if (e.getSource()==byDate){
+            sortingIndex=0;
+        }else if(e.getSource()==byAmount){
+            sortingIndex=1;
+        }
     }
 }

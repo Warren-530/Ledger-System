@@ -50,6 +50,7 @@ public class MyFrame extends JFrame{
     static ImageIcon hide;
     static String email;
     static String password;
+    static String passwordConfirm;
     static String name;
     static int userId;
         public MyFrame(){
@@ -164,22 +165,39 @@ public class MyFrame extends JFrame{
             panelLogin.add(submit);
             
             JLabel username1=new JLabel("Enter your username:");
-            username1.setBounds(100,200,200,50);
+            username1.setBounds(100,150,200,50);
             username1.setFont(new Font("Consolas",Font.BOLD,18));
             JTextField usernameField=new JTextField();
-            usernameField.setBounds(100,235,400,50);
+            usernameField.setBounds(100,190,400,50);
             usernameField.setFont(new Font("Consolas",Font.BOLD,18));
+            
+            JLabel emailReg=new JLabel("Enter your email:");
+            emailReg.setBounds(100,240,400,50);
+            emailReg.setFont(new Font("Consolas",Font.BOLD,18));
+            
+            JTextField emailTextR=new JTextField();
+            emailTextR.setBounds(100,280,400,50);
+            emailTextR.setFont(new Font("Consolas",Font.BOLD,18));
+            
 
             JLabel passwordReg=new JLabel("Enter a password");
-            passwordReg.setBounds(100,380,200,50);
+            passwordReg.setBounds(100,330,200,50);
             passwordReg.setFont(new Font("Consolas",Font.BOLD,18));
             
             JPasswordField passTextR=new JPasswordField();
-            passTextR.setBounds(100,415,400,50);
+            passTextR.setBounds(100,370,400,50);
             passTextR.setFont(new Font("Consolas",Font.BOLD,18));
             
+            JLabel passwordCon=new JLabel("Confirm password");
+            passwordCon.setBounds(100,420,200,50);
+            passwordCon.setFont(new Font("Consolas",Font.BOLD,18));
+            
+            JPasswordField passText2R=new JPasswordField();
+            passText2R.setBounds(100,460,400,50);
+            passText2R.setFont(new Font("Consolas",Font.BOLD,18));
+            
             JCheckBox passVisibleR=new JCheckBox();
-            passVisibleR.setBounds(500,415,55,50);
+            passVisibleR.setBounds(500,370,55,50);
             passVisibleR.setBackground(new Color(204,204,204));
             passVisibleR.setIcon(show);
             passVisibleR.setSelectedIcon(hide);
@@ -191,43 +209,51 @@ public class MyFrame extends JFrame{
                 }
             });
             
-            JLabel emailReg=new JLabel("Enter your email:");
-            emailReg.setBounds(100,290,400,50);
-            emailReg.setFont(new Font("Consolas",Font.BOLD,18));
+            JCheckBox passConVisibleR=new JCheckBox();
+            passConVisibleR.setBounds(500,460,55,50);
+            passConVisibleR.setBackground(new Color(204,204,204));
+            passConVisibleR.setIcon(show);
+            passConVisibleR.setSelectedIcon(hide);
+            passConVisibleR.addItemListener((ItemEvent e) ->{
+                if (e.getStateChange()==ItemEvent.SELECTED){
+                    passText2R.setEchoChar((char)0);
+                }else{
+                    passText2R.setEchoChar('*');
+                }
+            });
             
-            JTextField emailTextR=new JTextField();
-            emailTextR.setBounds(100,320,400,50);
-            emailTextR.setFont(new Font("Consolas",Font.BOLD,18));
             
             JButton submitR=new JButton("REGISTER");
-            submitR.setBounds(200,500,200,50);
+            submitR.setBounds(200,550,200,50);
             submitR.setFocusable(false);
             submitR.addActionListener((ActionEvent e)->{
                 if (e.getSource()==submitR){
                     email=emailTextR.getText();
                     password=passTextR.getText();
+                    passwordConfirm=passText2R.getText();
                     name=usernameField.getText();
-                    while (true){
                     if (!RegistrationAndLogin.isEmailValid(email)){
                         JOptionPane.showMessageDialog(null,"The email is not valid","Invalid email",JOptionPane.ERROR_MESSAGE);
-                        break;
-                    }if (UserTable.isRegisteredAccount(email)){
+                       
+                    }else if (UserTable.isRegisteredAccount(email)){
                         JOptionPane.showMessageDialog(null,"The email has been registered","Invalid email",JOptionPane.ERROR_MESSAGE);
-                        break;
-                    }if (!RegistrationAndLogin.isNameValid(name)){
+                        
+                    }else if (!RegistrationAndLogin.isNameValid(name)){
                         JOptionPane.showMessageDialog(null,"The name cannot contain special letters or be left blank.","Invalid name",JOptionPane.ERROR_MESSAGE);
-                        break;
-                    }if (!RegistrationAndLogin.isPasswordValid(password)){
+                       
+                    }else if (!RegistrationAndLogin.isPasswordValid(password)){
                         JOptionPane.showMessageDialog(null,"The password must be longer than 5 characters with letters and digits","Invalid password",JOptionPane.ERROR_MESSAGE);
-                        break;
+                      
+                    }else if (!password.equals(passwordConfirm)){
+                        JOptionPane.showMessageDialog(null,"The please enter the same password in Confirm password.","Invalid password",JOptionPane.ERROR_MESSAGE);
                     }else{
                         String hashedPassword=RegistrationAndLogin.hashPassword(password);
                         UserTable.insertUser(name, email, hashedPassword);
                         JOptionPane.showMessageDialog(null,"You have successfully created an account! Login Now!","Registration success",JOptionPane.INFORMATION_MESSAGE);
-                        break;
+                   
                     }
                     }
-                }
+                
         });
             
                         
@@ -274,6 +300,9 @@ public class MyFrame extends JFrame{
             panelRegister.add(emailReg);
             panelRegister.add(emailTextR);
             panelRegister.add(submitR);
+            panelRegister.add(passText2R);
+            panelRegister.add(passwordCon);
+            panelRegister.add(passConVisibleR);
             
             layer=new JLayeredPane();
             layer.setBounds(0,0,1280,720);

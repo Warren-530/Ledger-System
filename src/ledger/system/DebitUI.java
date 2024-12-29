@@ -116,9 +116,10 @@ public class DebitUI {
                         balance=AccountBalance.debitBalance(MyFrame.userId, Double.parseDouble(amountCheck),TransactionUI.savingStatus,TransactionUI.percentage);//update the balance of user in account_balance table
                         AccountBalance.updateBalance(MyFrame.userId,balance);
                         TransactionsTable.insertTransaction(MyFrame.userId, "Debit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
-
+                        
                         balance =AccountBalance.getBalance(MyFrame.userId);
                         JOptionPane.showMessageDialog(null,"Debit transaction successfully recorded. Current balance is "+balance, "Transaction completed",JOptionPane.PLAIN_MESSAGE);
+                        TransactionsTable.updateSaving(MyFrame.userId,false,0);
                         TransactionUI.balance=balance;
                         TransactionUI.WindowStatus=false;
                         TransactionUI.frame.dispose();

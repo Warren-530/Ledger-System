@@ -78,7 +78,7 @@ public class LoansTable {
 
     // method to get status
     public static String getStatus(int userId) {
-        String sql = "SELECT status FROM loans WHERE user_id = ?";
+        String sql = "SELECT status FROM loans WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
 
@@ -86,7 +86,7 @@ public class LoansTable {
 
             // Check if a row is returned
             if (rs.next()) {
-                // Return the balance
+                // Return the status
                 return rs.getString("status");
             } else {
                 return "false";

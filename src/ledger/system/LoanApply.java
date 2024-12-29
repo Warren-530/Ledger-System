@@ -11,7 +11,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -55,8 +57,9 @@ public class LoanApply {
             monthly.setFont(new Font("Monospaced",Font.BOLD,24));
             monthly.setBounds(50,170,500,50);
             
+            LocalDate newdate=date.toLocalDate();
             JLabel time=new JLabel();
-            time.setText("Due before         : "+date);
+            time.setText("Due before         : "+newdate);
             time.setFont(new Font("Monospaced",Font.BOLD,24));
             time.setBounds(50,220,600,50);
             
