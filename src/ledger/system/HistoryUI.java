@@ -55,7 +55,7 @@ static JLabel to;
 static JCheckBox sort;
 static Object[][] data;
 static int filterIndex, sortingIndex;
-static Date startDate,endDate,beforeDate,afterDate,onDate;
+static Date startDate,endDate,onDate;
 static double minAm,maxAm;
 static String sortOrder,transactionType,minAms,maxAms;
 static boolean isSorting=false;
@@ -76,9 +76,10 @@ static boolean isSorting=false;
         title.setFont(new Font("Algerian",Font.BOLD,22));
         title.setBounds(30,0,600,100);
         title.setForeground(Color.white);
-        int rowcount=0;
-        data=new Object[HistoryTable.getRowCount(MyFrame.userId, rowcount)][5];
+        
+        
         if (!isSorting){
+            data=new Object[HistoryTable.getRowCount(MyFrame.userId)][5];
             HistoryTable.getHistory(MyFrame.userId,data);
         }
          
@@ -295,7 +296,7 @@ static boolean isSorting=false;
         filter.addActionListener((ActionEvent e)->{
             
             if (e.getSource()==filter){
-                startDate=null;endDate=null; beforeDate=null;afterDate=null;onDate=null;
+                startDate=null;endDate=null;onDate=null;
                 minAm=0;maxAm=0;
                 sortOrder=null;transactionType=null;
                 filterIndex=comboBox.getSelectedIndex();
@@ -309,7 +310,7 @@ static boolean isSorting=false;
                         break;
                     case 1:
                         try{
-                        beforeDate=before.getDate();
+                        onDate=before.getDate();
                         }catch(NullPointerException ex){
                             JOptionPane.showMessageDialog(null,"Please enter date", "Not valid date",JOptionPane.ERROR_MESSAGE);
                         }
@@ -325,7 +326,7 @@ static boolean isSorting=false;
                         break;
                     case 3:
                         try{
-                        afterDate=after.getDate();
+                        onDate=after.getDate();
                         }catch(NullPointerException ex){
                             JOptionPane.showMessageDialog(null,"Please enter date", "Not valid date",JOptionPane.ERROR_MESSAGE);
                         }
@@ -357,12 +358,19 @@ static boolean isSorting=false;
                     sortOrder="ASC";
                 }
                 isSorting=true;
-                HistoryTable.getFilteredAndSortedHistory(data, filterIndex, sortingIndex, startDate, endDate, minAm, maxAm, sortOrder, transactionType, MyFrame.userId);
+                data=new Object[HistoryTable.getFilteredRowCount(filterIndex, sortingIndex, startDate, endDate, onDate,minAm, maxAm, sortOrder, transactionType, MyFrame.userId)][5];
+                HistoryTable.getFilteredAndSortedHistory(data, filterIndex, sortingIndex, startDate, endDate, onDate,minAm, maxAm, sortOrder, transactionType, MyFrame.userId);
+                for(int i=0;i<data.length;i++){
+                    for (int j=0;j<data[i].length;j++){
+                        System.out.println(data[i][j]);
+                    }
+                }
                 frame.dispose();
                 new HistoryUI();
                 
             
             }
+            
         });
         
         
