@@ -117,6 +117,7 @@ public class LoanApply {
                     LoansTable.insertLoan(MyFrame.userId, principal , interest, period, loan, "Unpaid");
                     JOptionPane.showMessageDialog(null,"Credit loan application success!","Loan application completed",JOptionPane.PLAIN_MESSAGE);
                     TransactionUI.WindowStatus=false;
+                    TransactionUI.loanAlert=true;
                     TransactionUI.frame.dispose();
                     TransactionUI transactionUI = new TransactionUI();
                     frame.dispose();
