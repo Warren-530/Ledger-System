@@ -185,7 +185,27 @@ public class AccountBalance {
             System.out.println("Error updating balance: " + e.getMessage());
             
             }
-}
-
+        
+       
+        
+        }
+         public static void resetBalance(int userId) {
+        String selectSql = "UPDATE accountbalance SET savings =? WHERE user_id = ?";
+        
+        try {
+            // Fetch the current balance
+            
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+                
+                selectStmt.setDouble(1, 0);
+                selectStmt.setInt(2, userId);
+                
+                selectStmt.executeUpdate();
+            }
+        }catch (SQLException e) {
+            System.out.println("Error updating balance: " + e.getMessage());
+            
+            }
+         }
 
 }

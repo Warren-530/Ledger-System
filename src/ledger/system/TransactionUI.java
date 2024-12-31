@@ -17,12 +17,15 @@ import javax.swing.border.BevelBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -49,7 +52,7 @@ static String percentageS;
 static double percentage;
 static String loanAmountS;
 static double loanAmount;
-
+static double SavingBalance;
     public TransactionUI() {
         DatabaseConnector dbcon = new DatabaseConnector();
         debit=new JButton("DEBIT");
@@ -61,11 +64,11 @@ static double loanAmount;
         logout=new JButton("LOGOUT");
         exit=new JButton("LOGOUT AND EXIT");
         LocalDate date = LocalDate.now();
-        JLabel datetime=new JLabel(String.valueOf(date));
-        datetime.setBounds(25,600,300,75);
+        JLabel datetime=new JLabel("Today's date: "+String.valueOf(date));
+        datetime.setBounds(25,600,500,75);
         datetime.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         String name=AccountBalance.getName(MyFrame.userId);
-        JLabel welcome=new JLabel("<html>Welcome, "+name+"!<br>What can we help you today?");
+        JLabel welcome=new JLabel("<html>Welcome, "+name+"!<br>How can we help you today?");
         welcome.setBounds(40,0,1000,150);
         welcome.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,45));
         JPanel header=new JPanel();
@@ -84,17 +87,28 @@ static double loanAmount;
         account.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         account.setBounds(50,200,300,75);
         
-        double SavingBalance=AccountBalance.getSavings(MyFrame.userId);
+        SavingBalance=AccountBalance.getSavings(MyFrame.userId);
         JLabel accSaving=new JLabel();
         accSaving.setText("<html>Savings :<br>"+SavingBalance+"</html>");
         accSaving.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         accSaving.setBounds(50,300,300,75);
+        
         
         double LoanBalance=AccountBalance.getLoan(MyFrame.userId);
         JLabel accLoan=new JLabel();
         accLoan.setText("<html>Loan :<br>"+LoanBalance+"</html>");
         accLoan.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         accLoan.setBounds(50,400,300,75);
+        
+        Timestamp overdue=CreditLoan.getDueDate(MyFrame.userId);
+        LocalDateTime overdueDate=overdue.toLocalDateTime();
+        LocalDate dueDate=overdueDate.toLocalDate();
+        JLabel localDate=new JLabel();
+        localDate.setText("Due date: "+String.valueOf(dueDate));
+        localDate.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
+        localDate.setBounds(50,470,300,75);
+        localDate.setForeground(Color.red);
+        localDate.setVisible(false);
         
         debit.setBounds(550,200,300,100);
         debit.setBackground(new Color(12,35,89));
@@ -149,6 +163,8 @@ static double loanAmount;
                 }
             
         });
+        
+        
         savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
         percentage=TransactionsTable.getPercentage(MyFrame.userId);
         savings.setBounds(900,200,300,100);
@@ -202,12 +218,15 @@ static double loanAmount;
         });
         loanStatus=LoansTable.getStatus(MyFrame.userId);
         if (loanStatus.equals("Unpaid")){
+            localDate.setVisible(true);
             if (CreditLoan.isOverdue(MyFrame.userId)){
+                JOptionPane.showMessageDialog(null,"Your credit loan had overdue! Your debit and credit access will be restricted until your loan is paid.","Transaction Restriction",JOptionPane.WARNING_MESSAGE);
                 debit.setEnabled(false);
                 credit.setEnabled(false);
+                
             }
         }
-
+        
         creditLoan.setBounds(900,350,300,100);
         creditLoan.setBackground(new Color(12,35,89));
         creditLoan.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -317,6 +336,7 @@ static double loanAmount;
         layer.add(accSaving, Integer.valueOf(1));
         layer.add(accLoan, Integer.valueOf(1));
         layer.add(datetime, Integer.valueOf(1));
+        layer.add(localDate, Integer.valueOf(1));
         
         frame=new JFrame();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -344,5 +364,16 @@ static double loanAmount;
         }
         
     });
+        if(TransactionsTable.EndOfMonthCheck()&&SavingBalance>0){
+            double updateBalance=AccountBalance.debitBalance(MyFrame.userId, SavingBalance,false,0);
+             AccountBalance.updateBalance(MyFrame.userId,updateBalance);
+             AccountBalance.resetBalance(MyFrame.userId);
+             JOptionPane.showMessageDialog(null,"Your saving has been transfer into your account balance","Its the end of the Month!",JOptionPane.INFORMATION_MESSAGE);
+             frame.dispose();
+             new TransactionUI();
+        }
+    }
+        public static void main(String[]args){
+         SwingUtilities.invokeLater(TransactionUI::new);
     }
 }

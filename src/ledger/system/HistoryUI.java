@@ -358,13 +358,8 @@ static boolean isSorting=false;
                     sortOrder="ASC";
                 }
                 isSorting=true;
-                data=new Object[HistoryTable.getFilteredRowCount(filterIndex, sortingIndex, startDate, endDate, onDate,minAm, maxAm, sortOrder, transactionType, MyFrame.userId)][5];
+                data=new Object[HistoryTable.getFilteredRowCount(filterIndex, sortingIndex, startDate, endDate, onDate, minAm, maxAm, sortOrder, transactionType, MyFrame.userId)][5];
                 HistoryTable.getFilteredAndSortedHistory(data, filterIndex, sortingIndex, startDate, endDate, onDate,minAm, maxAm, sortOrder, transactionType, MyFrame.userId);
-                for(int i=0;i<data.length;i++){
-                    for (int j=0;j<data[i].length;j++){
-                        System.out.println(data[i][j]);
-                    }
-                }
                 frame.dispose();
                 new HistoryUI();
                 

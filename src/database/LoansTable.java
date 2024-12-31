@@ -143,7 +143,7 @@ public class LoansTable {
 
     // method to get the period
     public static int getPeriod(int userId) {
-        String sql = "SELECT repayment_period FROM loans WHERE user_id = ?";
+        String sql = "SELECT repayment_period FROM loans WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, userId);
 

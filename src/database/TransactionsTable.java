@@ -40,7 +40,7 @@ public class TransactionsTable {
                 if (rs.next()) {
                     return rs.getBoolean("status");
                 } else {
-                    System.out.println("No account found for user_id: " + userId);
+                    return false;
                 }
         } catch (SQLException e) {
             System.out.println("Error inserting transaction: " + e.getMessage());
@@ -81,4 +81,9 @@ public class TransactionsTable {
             return 0;
         }
     }
+        public static boolean EndOfMonthCheck(){
+            LocalDate today=LocalDate.now();
+            LocalDate lastDay=today.withDayOfMonth(today.lengthOfMonth());
+            return today.equals(lastDay);
+        }
 }

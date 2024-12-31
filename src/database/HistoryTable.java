@@ -8,9 +8,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import ledger.system.MyFrame;
+
 /**
  *
  * @author Liyik
@@ -68,12 +70,12 @@ public class HistoryTable {
         ArrayList<Object> parameters = new ArrayList<>();
 
         parameters.add(userId); // First parameter is always user_id
-
+        SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd");
         // Filtering (filterIndex)
         switch (filterIndex) {
             case 0: // Filter on a Certain Date 
                 sql.append(" AND date = ?");
-                parameters.add(specificDate);
+                parameters.add(dateOnly.format(specificDate));
                 break;
             case 1:// Filter Before a Certain Date
                 sql.append(" AND date < ?");
@@ -144,19 +146,20 @@ public class HistoryTable {
         ArrayList<Object> parameters = new ArrayList<>();
 
         parameters.add(userId); // First parameter is always user_id
-
+        SimpleDateFormat dateOnly = new SimpleDateFormat("yyyy-MM-dd");
         // Filtering (filterIndex)
         switch (filterIndex) {
             case 0: // Filter on a Certain Date
                 sql.append(" AND date = ?");
-                parameters.add(specificDate);
+                parameters.add(dateOnly.format(specificDate));
                 break;
             case 1:  // Filter Before a Certain Date
                 sql.append(" AND date < ?");
                 parameters.add(specificDate);
-                sql.append(" AND date BETWEEN ? AND ?");
+                
                 break;
             case 2:// Filter by Date Range
+                sql.append(" AND date BETWEEN ? AND ?");
                 parameters.add(startDate);
                 parameters.add(endDate);
                 break;
@@ -189,6 +192,7 @@ public class HistoryTable {
             for (int i = 0; i < parameters.size(); i++) {
                 stmt.setObject(i + 1, parameters.get(i));
             }
+            
             
             // Execute the query
             ResultSet rs = stmt.executeQuery();

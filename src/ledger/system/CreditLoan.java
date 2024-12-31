@@ -50,15 +50,15 @@ public class CreditLoan{
     }
 
     public static boolean isOverdue(int userId){
-        
+        status=LoansTable.getStatus(userId);
         try {
             LocalDateTime dueDate = calculateDueDate(userId);
 
             // Check if the current date is after the due date && the loan is not fully paid
-            if (LocalDateTime.now().isAfter(dueDate) && !status.equals("paid") && total_loan > 0) {
+            System.out.println(LocalDateTime.now().isAfter(dueDate));
+            if (LocalDateTime.now().isAfter(dueDate) && status.equals("Unpaid") && LoansTable.getLoan(userId) > 0) {
                 return true;
             } else { // createdAt == null
-                System.out.println("No loan found for the user.");
                 return false;
             }
 
