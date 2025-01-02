@@ -136,13 +136,14 @@ public class LoanUI {
                                 if (date<=0){
                                     JOptionPane.showMessageDialog(null,"Please enter a VALID month", "Error",JOptionPane.INFORMATION_MESSAGE);
                                     
+                                }else{
+                                    monthly=CreditLoan.calculateMonthlyInstallment(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date);
+                                    totalLoan=CreditLoan.calculateLoan(monthly,date);
+                                    dueDate=dueDate.plusMonths(date);
+                                    dueDate=dueDate.withHour(0).withSecond(0).withNano(0);
+                                    LoanApply loanApply = new LoanApply(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date, dueDate,totalLoan,monthly);
+                                    frame.dispose();
                                 }
-                                monthly=CreditLoan.calculateMonthlyInstallment(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date);
-                                totalLoan=CreditLoan.calculateLoan(monthly,date);
-                                dueDate=dueDate.plusMonths(date);
-                                dueDate=dueDate.withHour(0).withSecond(0).withNano(0);
-                                LoanApply loanApply = new LoanApply(Double.parseDouble(amountCheck),Double.parseDouble(interestCheck),date, dueDate,totalLoan,monthly);
-                                frame.dispose();
                             }catch (NumberFormatException a){
                                 JOptionPane.showMessageDialog(null,"Please enter a VALID month", "Error",JOptionPane.ERROR_MESSAGE);
                                 

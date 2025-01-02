@@ -54,6 +54,7 @@ static String loanAmountS;
 static double loanAmount;
 static double SavingBalance;
 static boolean loanAlert=false;
+static boolean savingAlert=false;
     public TransactionUI() {
         DatabaseConnector dbcon = new DatabaseConnector();
         debit=new JButton("DEBIT");
@@ -220,11 +221,7 @@ static boolean loanAlert=false;
         loanStatus=LoansTable.getStatus(MyFrame.userId);
         if (loanStatus.equals("Unpaid")){
             localDate.setVisible(true);
-            if (CreditLoan.isOverdue(MyFrame.userId)){
-                JOptionPane.showMessageDialog(null,"Your credit loan had overdue! Your debit and credit access will be restricted until your loan is paid.","Transaction Restriction",JOptionPane.WARNING_MESSAGE);
-                debit.setEnabled(false);
-                credit.setEnabled(false);
-        }
+            
         }
         
         creditLoan.setBounds(900,350,300,100);
@@ -291,6 +288,7 @@ static boolean loanAlert=false;
                         JOptionPane.showMessageDialog(null,"Thank you for using Ledger System. See you next time!","LOGOUT",JOptionPane.PLAIN_MESSAGE);
                         frame.dispose();
                         loanAlert=false;
+                        savingAlert=false;
                         MyFrame myframe=new MyFrame();
                     }
                 }
@@ -366,19 +364,27 @@ static boolean loanAlert=false;
         
         
     });
+
+        if (loanStatus.equals("Unpaid")&&CreditLoan.isOverdue(MyFrame.userId)){
+                JOptionPane.showMessageDialog(null,"Your credit loan had overdue! Your debit and credit access will be restricted until your loan is paid.","Transaction Restriction",JOptionPane.WARNING_MESSAGE);
+                debit.setEnabled(false);
+                credit.setEnabled(false);
+        }
         if (loanStatus.equals("Unpaid")&&!CreditLoan.isOverdue(MyFrame.userId)&&loanAlert==false){
             JOptionPane.showMessageDialog(null,"Your credit loan will be due on "+dueDate+". Please remember to pay it in time!","Loan Remind",JOptionPane.INFORMATION_MESSAGE);
             loanAlert=true;
         }
         
-        if(TransactionsTable.EndOfMonthCheck()&&SavingBalance>0){
+        if(TransactionsTable.EndOfMonthCheck()&&SavingBalance>0&&savingAlert==false){
             double updateBalance=AccountBalance.debitBalance(MyFrame.userId, SavingBalance,false,0);
              AccountBalance.updateBalance(MyFrame.userId,updateBalance);
              AccountBalance.resetBalance(MyFrame.userId);
              JOptionPane.showMessageDialog(null,"Your saving has been transfer into your account balance","Its the end of the Month!",JOptionPane.INFORMATION_MESSAGE);
+             savingAlert=true;
              frame.dispose();
              new TransactionUI();
         }
+        savingAlert=true;
     }
         public static void main(String[]args){
          SwingUtilities.invokeLater(TransactionUI::new);
