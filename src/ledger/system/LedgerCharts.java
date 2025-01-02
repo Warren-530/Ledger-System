@@ -41,7 +41,7 @@ public class LedgerCharts extends Application {
         primaryStage.show();
     }
 
-    private PieChart createSpendingPieChart(int userId) {
+    public PieChart createSpendingPieChart(int userId) {
         PieChart pieChart = new PieChart();
         pieChart.setTitle("Spending by Category");
 
@@ -66,7 +66,7 @@ public class LedgerCharts extends Application {
         return pieChart;
     }
 
-    private BarChart<String, Number> createSavingsBarChart(int userId) {
+    public BarChart<String, Number> createSavingsBarChart(int userId) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Month");
@@ -100,7 +100,7 @@ public class LedgerCharts extends Application {
         return barChart;
     }
 
-    private BarChart<String, Number> createLoanRepaymentBarChart(int userId) {
+    public BarChart<String, Number> createLoanRepaymentBarChart(int userId) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Month");
@@ -134,7 +134,7 @@ public class LedgerCharts extends Application {
         return barChart;
     }
 
-    private BarChart<String, Number> createSpendingTrendChart(int userId) {
+    public BarChart<String, Number> createSpendingTrendChart(int userId) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Month");
