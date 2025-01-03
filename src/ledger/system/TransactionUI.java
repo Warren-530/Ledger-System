@@ -267,7 +267,18 @@ static boolean savingAlert=false;
                 }
             
         });
-        
+        JButton chart=new JButton();
+        chart.setBounds(900,600,50,50);
+        chart.setBackground(new Color(12,35,89));
+        chart.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,25));
+        chart.setForeground(Color.white);
+        chart.setFocusable(false);
+        chart.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        chart.addActionListener((ActionEvent e)->{
+            if (e.getSource()==chart){
+                LedgerCharts.main(null);
+            }
+        });
         logout.setBounds(1000,20,200,50);
         logout.setBackground(new Color(12,35,89));
         logout.setIcon(new ImageIcon("logoutIcon.png"));
@@ -336,6 +347,7 @@ static boolean savingAlert=false;
         layer.add(accLoan, Integer.valueOf(1));
         layer.add(datetime, Integer.valueOf(1));
         layer.add(localDate, Integer.valueOf(1));
+        layer.add(chart, Integer.valueOf(1));
         
         frame=new JFrame();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
