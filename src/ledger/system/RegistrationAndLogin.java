@@ -78,18 +78,12 @@ public class RegistrationAndLogin {
                 return false; // Return false if any character is not a letter, digit, or space
             }
         }
+        if (name==null ||name.equals("")){
+            return false;
+        }
         return true; // Return true if all characters are valid
     }
 
-    public static void Login() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Email: ");
-        email = sc.nextLine();
-        System.out.print("Password: ");
-        password = sc.nextLine();
-        System.out.println("");//new line
-
-    }
 
     public static String getName() {
         return name;

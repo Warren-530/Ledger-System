@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ExportToCSV {
@@ -45,8 +46,10 @@ public class ExportToCSV {
                     pw.println();
                 }
                 pw.close();
+                JOptionPane.showMessageDialog(null,"File Exported!","File export", JOptionPane.PLAIN_MESSAGE);
                 System.out.println("File Exported!");
             } catch (IOException e) {
+                JOptionPane.showMessageDialog(null,"Problem with file output.","File export", JOptionPane.ERROR_MESSAGE);
                 System.out.println("Problem with file output");
             }
         }

@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
  *
  * @author Liyik
  */
-public class MyFrame extends JFrame{
+public class Login extends JFrame{
     static JPanel panelleft;
     static JPanel panelLogin;
     static JPanel panelRegister;
@@ -53,7 +53,7 @@ public class MyFrame extends JFrame{
     static String passwordConfirm;
     static String name;
     static int userId;
-        public MyFrame(){
+        public Login(){
             //Method calling to bulid connection
             DatabaseConnector dbcon = new DatabaseConnector();
             JFrame frame=new JFrame();
@@ -145,7 +145,7 @@ public class MyFrame extends JFrame{
                             break;
                         }
                     } catch (SQLException ex) {
-                        Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                         break;
                         }
                     }
@@ -165,13 +165,13 @@ public class MyFrame extends JFrame{
             panelLogin.add(submit);
             
             JLabel username1=new JLabel("Enter your username:");
-            username1.setBounds(100,150,200,50);
+            username1.setBounds(100,150,300,50);
             username1.setFont(new Font("Consolas",Font.BOLD,18));
             JTextField usernameField=new JTextField();
             usernameField.setBounds(100,190,400,50);
             usernameField.setFont(new Font("Consolas",Font.BOLD,18));
             
-            JLabel emailReg=new JLabel("Enter your email:");
+            JLabel emailReg=new JLabel("Entwer your email:");
             emailReg.setBounds(100,240,400,50);
             emailReg.setFont(new Font("Consolas",Font.BOLD,18));
             
@@ -336,7 +336,7 @@ public class MyFrame extends JFrame{
 
         }
         public static void main(String[]args){
-         SwingUtilities.invokeLater(MyFrame::new);
+         SwingUtilities.invokeLater(Login::new);
     }
 
 }

@@ -69,5 +69,15 @@ public class CreditLoan{
             return false; 
         }
     }
+    
+    public static boolean decimalCheck(double input) {
+        String inputAsString = Double.toString(input);
+        if (inputAsString.contains(".")) {
+            String[] parts = inputAsString.split("\\.");
+            String fractionalPart = parts[1];
+            return fractionalPart.length() > 2;
+        }
+        return false; // No decimal places
+    }
 
 }

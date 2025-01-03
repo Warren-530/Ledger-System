@@ -114,7 +114,7 @@ public class LoanApply {
             apply.addActionListener((ActionEvent e)->{
                if(e.getSource()==apply){
                     
-                    LoansTable.insertLoan(MyFrame.userId, principal , interest, period, loan, "Unpaid");
+                    LoansTable.insertLoan(Login.userId, principal , interest, period, loan, "Unpaid");
                     JOptionPane.showMessageDialog(null,"Credit loan application success!","Loan application completed",JOptionPane.PLAIN_MESSAGE);
                     TransactionUI.WindowStatus=false;
                     TransactionUI.loanAlert=true;

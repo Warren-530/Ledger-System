@@ -97,7 +97,7 @@ public class DepositUI {
         Maybankint.setBackground(new Color(237,234,228));  
         Maybankint.setHorizontalAlignment(JLabel.CENTER);
         
-        HL=new JButton("HL");
+        HL=new JButton("HongLeong");
         HL.setBounds(0,240,200,50);
         HL.setFont(new Font("Consolas",Font.BOLD,20));
         HL.setFocusable(false);
@@ -252,7 +252,7 @@ public class DepositUI {
         AmBank.setBorder(BorderFactory.createBevelBorder(0));
         Standard.setBorder(BorderFactory.createBevelBorder(0));
     }
-    private final double balance=AccountBalance.getBalance(MyFrame.userId);
+    private final double balance=AccountBalance.getBalance(Login.userId);
     private double answer;
     private ActionListener cal(){
         DecimalFormat df = new DecimalFormat("0.00");

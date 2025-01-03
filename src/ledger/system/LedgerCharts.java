@@ -28,16 +28,16 @@ public class LedgerCharts extends Application {
     @Override
     public void start(Stage primaryStage) {
         // PieChart for Spending by Category
-        PieChart spendingPieChart = createSpendingPieChart(MyFrame.userId); 
+        PieChart spendingPieChart = createSpendingPieChart(Login.userId); 
 
         // BarChart for Savings Growth
-        BarChart<String, Number> savingsBarChart = createSavingsBarChart(MyFrame.userId); 
+        BarChart<String, Number> savingsBarChart = createSavingsBarChart(Login.userId); 
 
         // BarChart for Loan Repayment
-        BarChart<String, Number> loanRepaymentBarChart = createLoanRepaymentBarChart(MyFrame.userId); 
+        BarChart<String, Number> loanRepaymentBarChart = createLoanRepaymentBarChart(Login.userId); 
 
         // LineChart for Spending Trends
-        BarChart<String, Number> spendingTrendChart = createSpendingTrendChart(MyFrame.userId); 
+        BarChart<String, Number> spendingTrendChart = createSpendingTrendChart(Login.userId); 
 
         VBox vbox = new VBox(10, spendingPieChart, savingsBarChart, loanRepaymentBarChart, spendingTrendChart);
         Scene scene = new Scene(vbox, 800, 800);

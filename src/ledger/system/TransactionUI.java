@@ -70,7 +70,7 @@ static boolean savingAlert=false;
         JLabel datetime=new JLabel("Today's date: "+String.valueOf(date));
         datetime.setBounds(25,600,500,75);
         datetime.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
-        String name=AccountBalance.getName(MyFrame.userId);
+        String name=AccountBalance.getName(Login.userId);
         JLabel welcome=new JLabel("<html>Welcome, "+name+"!<br>How can we help you today?");
         welcome.setBounds(40,0,1000,150);
         welcome.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,45));
@@ -84,26 +84,26 @@ static boolean savingAlert=false;
         left.setBounds(-5,145,500,680);
         left.setBorder(BorderFactory.createBevelBorder(0));
         
-        balance =AccountBalance.getBalance(MyFrame.userId);
+        balance =AccountBalance.getBalance(Login.userId);
         account=new JLabel();
         account.setText("<html>Account Balance :<br>"+balance+"</html>");
         account.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         account.setBounds(50,200,300,75);
         
-        SavingBalance=AccountBalance.getSavings(MyFrame.userId);
+        SavingBalance=AccountBalance.getSavings(Login.userId);
         JLabel accSaving=new JLabel();
         accSaving.setText("<html>Savings :<br>"+SavingBalance+"</html>");
         accSaving.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         accSaving.setBounds(50,300,300,75);
         
         
-        double LoanBalance=AccountBalance.getLoan(MyFrame.userId);
+        double LoanBalance=AccountBalance.getLoan(Login.userId);
         JLabel accLoan=new JLabel();
         accLoan.setText("<html>Loan :<br>"+LoanBalance+"</html>");
         accLoan.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
         accLoan.setBounds(50,400,300,75);
         
-        Timestamp overdue=CreditLoan.getDueDate(MyFrame.userId);
+        Timestamp overdue=CreditLoan.getDueDate(Login.userId);
         LocalDate dueDate=null;
         try{
             LocalDateTime overdueDate=overdue.toLocalDateTime();
@@ -173,8 +173,8 @@ static boolean savingAlert=false;
         });
         
         
-        savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
-        percentage=TransactionsTable.getPercentage(MyFrame.userId);
+        savingStatus=TransactionsTable.SavingActive(Login.userId);
+        percentage=TransactionsTable.getPercentage(Login.userId);
         savings.setBounds(900,200,300,100);
         savings.setBackground(new Color(12,35,89));
         savings.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -187,11 +187,11 @@ static boolean savingAlert=false;
                 if (savingStatus){
                     activate=JOptionPane.showConfirmDialog(null,"You have activate your saving. Do you want to stop it?","Saving Cancelation",JOptionPane.YES_NO_OPTION);
                     if (activate==0){
-                        TransactionsTable.updateSaving(MyFrame.userId,false,0);
-                        JOptionPane.showMessageDialog(null,"Saving cancelation success!","Saving Cancelation",JOptionPane.INFORMATION_MESSAGE);
+                        TransactionsTable.updateSaving(Login.userId,false,0);
+                        JOptionPane.showMessageDialog(null,"Saving cancelation success!","Saving Cancellation",JOptionPane.INFORMATION_MESSAGE);
                         frame.dispose();
                         frame.setVisible(true);
-                        savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
+                        savingStatus=TransactionsTable.SavingActive(Login.userId);
                     }
                 }else{
                     activate=JOptionPane.showConfirmDialog(null,"Your saving is inactive. Do you want to activate it?","Saving activation",JOptionPane.YES_NO_OPTION);
@@ -212,11 +212,11 @@ static boolean savingAlert=false;
                                         JOptionPane.showMessageDialog(null,"Percentage entered cannot equal to 0.","Saving Activation",JOptionPane.ERROR_MESSAGE);
                                         continue;
                                     }
-                                TransactionsTable.updateSaving(MyFrame.userId,true,percentage);
+                                TransactionsTable.updateSaving(Login.userId,true,percentage);
                                 JOptionPane.showMessageDialog(null,"Saving activation success!","Saving Activation",JOptionPane.INFORMATION_MESSAGE);
                                 frame.dispose();
                                 frame.setVisible(true);
-                                savingStatus=TransactionsTable.SavingActive(MyFrame.userId);
+                                savingStatus=TransactionsTable.SavingActive(Login.userId);
                                 break;
                         }
                     }
@@ -224,7 +224,7 @@ static boolean savingAlert=false;
             }
             
         });
-        loanStatus=LoansTable.getStatus(MyFrame.userId);
+        loanStatus=LoansTable.getStatus(Login.userId);
         if (loanStatus.equals("Unpaid")){
             localDate.setVisible(true);
             
@@ -249,6 +249,7 @@ static boolean savingAlert=false;
                                 LoanUI loanUI=new LoanUI();
                             }
                     }else if (loanStatus.equals("Unpaid")){
+                        WindowStatus=true; 
                         LoanRepay loanRepay=new LoanRepay();
                     }
                 }
@@ -309,7 +310,7 @@ static boolean savingAlert=false;
                         frame.dispose();
                         loanAlert=false;
                         savingAlert=false;
-                        MyFrame myframe=new MyFrame();
+                        Login myframe=new Login();
                     }
                 }
             }
@@ -388,20 +389,20 @@ static boolean savingAlert=false;
         
     });
 
-        if (loanStatus.equals("Unpaid")&&CreditLoan.isOverdue(MyFrame.userId)){
+        if (loanStatus.equals("Unpaid")&&CreditLoan.isOverdue(Login.userId)){
                 JOptionPane.showMessageDialog(null,"Your credit loan had overdue! Your debit and credit access will be restricted until your loan is paid.","Transaction Restriction",JOptionPane.WARNING_MESSAGE);
                 debit.setEnabled(false);
                 credit.setEnabled(false);
         }
-        if (loanStatus.equals("Unpaid")&&!CreditLoan.isOverdue(MyFrame.userId)&&loanAlert==false){
+        if (loanStatus.equals("Unpaid")&&!CreditLoan.isOverdue(Login.userId)&&loanAlert==false){
             JOptionPane.showMessageDialog(null,"Your credit loan will be due on "+dueDate+". Please remember to pay it in time!","Loan Remind",JOptionPane.INFORMATION_MESSAGE);
             loanAlert=true;
         }
         
         if(TransactionsTable.EndOfMonthCheck()&&SavingBalance>0&&savingAlert==false){
-            double updateBalance=AccountBalance.debitBalance(MyFrame.userId, SavingBalance,false,0);
-             AccountBalance.updateBalance(MyFrame.userId,updateBalance);
-             AccountBalance.resetBalance(MyFrame.userId);
+            double updateBalance=AccountBalance.debitBalance(Login.userId, SavingBalance,false,0);
+             AccountBalance.updateBalance(Login.userId,updateBalance);
+             AccountBalance.resetBalance(Login.userId);
              JOptionPane.showMessageDialog(null,"Your saving has been transfer into your account balance","Its the end of the Month!",JOptionPane.INFORMATION_MESSAGE);
              savingAlert=true;
              frame.dispose();

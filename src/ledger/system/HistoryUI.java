@@ -78,8 +78,8 @@ static boolean isSorting=false;
         
         
         if (!isSorting){
-            data=new Object[HistoryTable.getRowCount(MyFrame.userId)][5];
-            HistoryTable.getHistory(MyFrame.userId,data);
+            data=new Object[HistoryTable.getRowCount(Login.userId)][5];
+            HistoryTable.getHistory(Login.userId,data);
         }
          
         
@@ -256,6 +256,7 @@ static boolean isSorting=false;
 
                 TransactionUI.WindowStatus=false;
                 frame.dispose();
+                isSorting=false;
                 
             
         }
@@ -357,8 +358,8 @@ static boolean isSorting=false;
                     sortOrder="ASC";
                 }
                 isSorting=true;
-                data=new Object[HistoryTable.getFilteredRowCount(filterIndex, sortingIndex, startDate, endDate, onDate, minAm, maxAm, sortOrder, transactionType, MyFrame.userId)][5];
-                HistoryTable.getFilteredAndSortedHistory(data, filterIndex, sortingIndex, startDate, endDate, onDate,minAm, maxAm, sortOrder, transactionType, MyFrame.userId);
+                data=new Object[HistoryTable.getFilteredRowCount(filterIndex, sortingIndex, startDate, endDate, onDate, minAm, maxAm, sortOrder, transactionType, Login.userId)][5];
+                HistoryTable.getFilteredAndSortedHistory(data, filterIndex, sortingIndex, startDate, endDate, onDate,minAm, maxAm, sortOrder, transactionType, Login.userId);
                 frame.dispose();
                 new HistoryUI();
                 

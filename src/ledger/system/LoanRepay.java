@@ -49,8 +49,8 @@ public class LoanRepay {
             title.setBounds(130,25,600,50);
             title.setForeground(Color.white);
             
-            balance=LoansTable.getLoan(MyFrame.userId);
-            status=LoansTable.getStatus(MyFrame.userId);
+            balance=LoansTable.getLoan(Login.userId);
+            status=LoansTable.getStatus(Login.userId);
             JLabel outstanding=new JLabel();
             outstanding.setText("Outstanding balance: "+balance);
             outstanding.setFont(new Font("Monospaced",Font.BOLD,20));
@@ -95,13 +95,13 @@ public class LoanRepay {
             frame.add(layer);
             frame.setLocationRelativeTo(null);
             
-
+            
             next.addActionListener((ActionEvent e)->{
                 if (e.getSource()==next){
                     String amountCheck=repayAmount.getText();
                         if (amountCheck.trim().equals("")){
                             JOptionPane.showMessageDialog(null,"Please enter an amount for repayment.", "Error",JOptionPane.INFORMATION_MESSAGE);
-                        }else if(DebitUI.ifAmountNotValid(amountCheck)) {
+                        }else if(DebitUI.ifAmountNotValid(amountCheck)||CreditLoan.decimalCheck(Double.parseDouble(amountCheck))) {
                             JOptionPane.showMessageDialog(null,"Please enter a VALID amount", "Error",JOptionPane.INFORMATION_MESSAGE);
                         }else if(Double.parseDouble(amountCheck)>balance){
                             JOptionPane.showMessageDialog(null,"Amount entered cannot exceed outstanding balance", "Error",JOptionPane.INFORMATION_MESSAGE);
@@ -113,8 +113,8 @@ public class LoanRepay {
                             }else{
                                 JOptionPane.showMessageDialog(null,"Credit loan repayment successfully completed. Current outstanding balance is "+balance, "Repayment completed",JOptionPane.PLAIN_MESSAGE);
                             }
-                            LoansTable.insertLoanHistory(MyFrame.userId,Double.parseDouble(amountCheck),balance);
-                            LoansTable.updateLoan(MyFrame.userId,balance, status);
+                            LoansTable.insertLoanHistory(Login.userId,Double.parseDouble(amountCheck),balance);
+                            LoansTable.updateLoan(Login.userId,balance, status);
                             TransactionUI.WindowStatus=false;
                             TransactionUI.frame.dispose();
                             new TransactionUI();

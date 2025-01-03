@@ -59,7 +59,7 @@ public class DebitUI {
         title.setBounds(285,25,150,50);
         title.setForeground(Color.white);
         
-        balance =AccountBalance.getBalance(MyFrame.userId);
+        balance =AccountBalance.getBalance(Login.userId);
         account=new JLabel();
         account.setText("Account Balance\t: "+balance);
         account.setFont(new Font("Monospaced",Font.BOLD,20));
@@ -113,13 +113,13 @@ public class DebitUI {
                     }else{
                         LocalDate date=LocalDate.now();
 
-                        balance=AccountBalance.debitBalance(MyFrame.userId, Double.parseDouble(amountCheck),TransactionUI.savingStatus,TransactionUI.percentage);//update the balance of user in account_balance table
-                        AccountBalance.updateBalance(MyFrame.userId,balance);
-                        TransactionsTable.insertTransaction(MyFrame.userId, "Debit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
+                        balance=AccountBalance.debitBalance(Login.userId, Double.parseDouble(amountCheck),TransactionUI.savingStatus,TransactionUI.percentage);//update the balance of user in account_balance table
+                        AccountBalance.updateBalance(Login.userId,balance);
+                        TransactionsTable.insertTransaction(Login.userId, "Debit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
                         
-                        balance =AccountBalance.getBalance(MyFrame.userId);
+                        balance =AccountBalance.getBalance(Login.userId);
                         JOptionPane.showMessageDialog(null,"Debit transaction successfully recorded. Current balance is "+balance, "Transaction completed",JOptionPane.PLAIN_MESSAGE);
-                        TransactionsTable.updateSaving(MyFrame.userId,false,0);
+                        TransactionsTable.updateSaving(Login.userId,false,0);
                         TransactionUI.balance=balance;
                         TransactionUI.WindowStatus=false;
                         TransactionUI.frame.dispose();

@@ -59,7 +59,7 @@ public class CreditUI {
         title.setBounds(280,25,200,50);
         title.setForeground(Color.white);
         
-        balance=AccountBalance.getBalance(MyFrame.userId);
+        balance=AccountBalance.getBalance(Login.userId);
         account=new JLabel();
         account.setText("Account Balance: "+balance);
         account.setFont(new Font("Monospaced",Font.BOLD,20));
@@ -115,10 +115,10 @@ public class CreditUI {
                         break;
                     }else{
                         LocalDate date=LocalDate.now();
-                        balance=AccountBalance.creditBalance(MyFrame.userId, Double.parseDouble(amountCheck));//update the balance of user in account_balance table
-                        AccountBalance.updateBalance(MyFrame.userId, balance);
-                        TransactionsTable.insertTransaction(MyFrame.userId, "Credit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
-                        balance =AccountBalance.getBalance(MyFrame.userId);
+                        balance=AccountBalance.creditBalance(Login.userId, Double.parseDouble(amountCheck));//update the balance of user in account_balance table
+                        AccountBalance.updateBalance(Login.userId, balance);
+                        TransactionsTable.insertTransaction(Login.userId, "Credit", Double.parseDouble(amountCheck), refCheck, date, balance);//insert a new debit record into transactions table
+                        balance =AccountBalance.getBalance(Login.userId);
                         JOptionPane.showMessageDialog(null,"Credit transaction successfully recorded. Current balance is "+balance, "Transaction completed",JOptionPane.PLAIN_MESSAGE);
                         TransactionUI.balance=balance;
                         TransactionUI.WindowStatus=false;
