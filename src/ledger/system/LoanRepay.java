@@ -66,7 +66,7 @@ public class LoanRepay {
             repayAmount.setFont(new Font("Monospaced",Font.BOLD,20));
             repayAmount.setBorder(BorderFactory.createBevelBorder(1,Color.lightGray,Color.darkGray));
             
-            JButton next=new JButton("NEXT");
+            JButton next=new JButton("Repay");
             next.setBounds(275,380,150,50);
             next.setFont(new Font("Monospaced",Font.BOLD,20));
             next.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -113,6 +113,7 @@ public class LoanRepay {
                             }else{
                                 JOptionPane.showMessageDialog(null,"Credit loan repayment successfully completed. Current outstanding balance is "+balance, "Repayment completed",JOptionPane.PLAIN_MESSAGE);
                             }
+                            LoansTable.insertLoanHistory(MyFrame.userId,Double.parseDouble(amountCheck),balance);
                             LoansTable.updateLoan(MyFrame.userId,balance, status);
                             TransactionUI.WindowStatus=false;
                             TransactionUI.frame.dispose();

@@ -86,4 +86,5 @@ public class TransactionsTable {
             LocalDate lastDay=today.withDayOfMonth(today.lengthOfMonth());
             return today.equals(lastDay);
         }
+        
 }

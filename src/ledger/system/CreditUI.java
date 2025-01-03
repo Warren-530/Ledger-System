@@ -63,7 +63,7 @@ public class CreditUI {
         account=new JLabel();
         account.setText("Account Balance: "+balance);
         account.setFont(new Font("Monospaced",Font.BOLD,20));
-        account.setBounds(100,120,300,50);
+        account.setBounds(100,120,500,50);
         
         creditAmount=new JLabel();
         creditAmount.setText("Amount of credit: ");

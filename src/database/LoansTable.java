@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class LoansTable {
@@ -161,5 +162,44 @@ public class LoansTable {
             return 0;
         }
     }
-    
+     public static void insertLoanHistory(int userId, double amount,double balance) {
+        String sql = "INSERT INTO savingloan (user_id, transaction_type, amount, date, balance) VALUES (?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {            
+            // update values for placeholders
+            
+            stmt.setInt(1, userId);
+            stmt.setString(2, "repaid");
+            stmt.setDouble(3, amount);
+            Date created_at = new Date();
+            Timestamp timestamp = new Timestamp(created_at.getTime());
+            stmt.setTimestamp(4, timestamp);
+            stmt.setDouble(5, balance);
+
+            // Execute the insertion
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error insert loans: " + e.getMessage());
+        }
+    }
+      public static void insertSavingHistory(int userId, double amount) {
+        String sql = "INSERT INTO savingloan (user_id, transaction_type, amount, date, balance) VALUES (?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {            
+            // update values for placeholders
+            
+            stmt.setInt(1, userId);
+            stmt.setString(2, "saving");
+            stmt.setDouble(3, amount);
+            Date created_at = new Date();
+            Timestamp timestamp = new Timestamp(created_at.getTime());
+            stmt.setTimestamp(4, timestamp);
+            stmt.setDouble(5, 0);
+
+            // Execute the insertion
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error insert saving: " + e.getMessage());
+        }
+    }
 }

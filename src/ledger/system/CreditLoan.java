@@ -46,6 +46,8 @@ public class CreditLoan{
         } catch (IllegalArgumentException e) {
             System.out.println("Error calculating due date: " + e.getMessage());
             return null; 
+        }catch (NullPointerException e){
+            return null; 
         }
     }
 

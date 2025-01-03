@@ -173,7 +173,7 @@ public class AccountBalance {
         double balance=getSavings(userId);
         try {
             // Fetch the current balance
-            
+            LoansTable.insertSavingHistory(userId, amount);
             try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
                 
                 selectStmt.setDouble(1, balance+amount);

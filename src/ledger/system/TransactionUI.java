@@ -20,6 +20,7 @@ import java.awt.event.WindowEvent;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import javafx.application.Platform;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -103,8 +104,13 @@ static boolean savingAlert=false;
         accLoan.setBounds(50,400,300,75);
         
         Timestamp overdue=CreditLoan.getDueDate(MyFrame.userId);
-        LocalDateTime overdueDate=overdue.toLocalDateTime();
-        LocalDate dueDate=overdueDate.toLocalDate();
+        LocalDate dueDate=null;
+        try{
+            LocalDateTime overdueDate=overdue.toLocalDateTime();
+            dueDate=overdueDate.toLocalDate();
+        }catch(NullPointerException e){
+            
+        }
         JLabel localDate=new JLabel();
         localDate.setText("Due date: "+String.valueOf(dueDate));
         localDate.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,30));
@@ -267,16 +273,19 @@ static boolean savingAlert=false;
                 }
             
         });
-        JButton chart=new JButton();
-        chart.setBounds(900,600,50,50);
-        chart.setBackground(new Color(12,35,89));
-        chart.setFont(new Font("Serif",Font.BOLD|Font.ITALIC,25));
-        chart.setForeground(Color.white);
+        ImageIcon chartIcon=new ImageIcon("chart-646.png");
+        JButton chart=new JButton("Charts");
+        chart.setBounds(1150,640,100,40);
+        chart.setBackground(new Color(247,239,218));
+        chart.setIcon(chartIcon);
         chart.setFocusable(false);
         chart.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         chart.addActionListener((ActionEvent e)->{
             if (e.getSource()==chart){
-                LedgerCharts.main(null);
+                JavaFXLauncher.initializeJavaFX();
+                Platform.runLater(() -> {
+                    LedgerCharts.main(null);
+                });
             }
         });
         logout.setBounds(1000,20,200,50);
@@ -322,6 +331,7 @@ static boolean savingAlert=false;
                     if (value==0){
                         JOptionPane.showMessageDialog(null,"Thank you for using Ledger System. See you next time!","LOGOUT",JOptionPane.PLAIN_MESSAGE);
                         frame.dispose();
+                        Platform.exit();
                     }
                 }
             }
@@ -370,6 +380,7 @@ static boolean savingAlert=false;
                 {if (close==0){
                     JOptionPane.showMessageDialog(null,"Thank you for using Ledger System. See you next time!","Log Out and Exit",JOptionPane.PLAIN_MESSAGE);
                     frame.dispose();
+                    Platform.exit();
                 }
             }
         }

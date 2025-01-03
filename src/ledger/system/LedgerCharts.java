@@ -18,6 +18,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import static database.DatabaseConnector.getConnection;
+import javafx.application.Platform;
+
 
 public class LedgerCharts extends Application {
 
@@ -26,16 +28,16 @@ public class LedgerCharts extends Application {
     @Override
     public void start(Stage primaryStage) {
         // PieChart for Spending by Category
-        PieChart spendingPieChart = createSpendingPieChart(1); // Pass user_id = 1 as example
+        PieChart spendingPieChart = createSpendingPieChart(MyFrame.userId); 
 
         // BarChart for Savings Growth
-        BarChart<String, Number> savingsBarChart = createSavingsBarChart(1); // Pass user_id = 1 as example
+        BarChart<String, Number> savingsBarChart = createSavingsBarChart(MyFrame.userId); 
 
         // BarChart for Loan Repayment
-        BarChart<String, Number> loanRepaymentBarChart = createLoanRepaymentBarChart(1); // Pass user_id = 1 as example
+        BarChart<String, Number> loanRepaymentBarChart = createLoanRepaymentBarChart(MyFrame.userId); 
 
         // LineChart for Spending Trends
-        BarChart<String, Number> spendingTrendChart = createSpendingTrendChart(1); // Pass user_id = 1 as example
+        BarChart<String, Number> spendingTrendChart = createSpendingTrendChart(MyFrame.userId); 
 
         VBox vbox = new VBox(10, spendingPieChart, savingsBarChart, loanRepaymentBarChart, spendingTrendChart);
         Scene scene = new Scene(vbox, 800, 800);
@@ -45,7 +47,7 @@ public class LedgerCharts extends Application {
         primaryStage.show();
     }
 
-    public PieChart createSpendingPieChart(int userId) {
+    public static PieChart createSpendingPieChart(int userId) {
         PieChart pieChart = new PieChart();
         pieChart.setTitle("Spending by Category");
 
@@ -70,7 +72,7 @@ public class LedgerCharts extends Application {
         return pieChart;
     }
 
-    public BarChart<String, Number> createSavingsBarChart(int userId) {
+    public static BarChart<String, Number> createSavingsBarChart(int userId) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Month");
@@ -80,8 +82,8 @@ public class LedgerCharts extends Application {
         barChart.setTitle("Savings Growth Over Time");
 
         String sql = "SELECT DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as total_savings " +
-                "FROM transactions " +
-                "WHERE user_id = ? AND transaction_type = 'savings' " +
+                "FROM savingloan " +
+                "WHERE user_id = ? AND transaction_type = 'saving' " +
                 "GROUP BY month";
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -92,7 +94,7 @@ public class LedgerCharts extends Application {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String month = rs.getString("month");
+                String month=rs.getString("month");
                 double totalSavings = rs.getDouble("total_savings");
                 series.getData().add(new XYChart.Data<>(month, totalSavings));
             }
@@ -104,7 +106,7 @@ public class LedgerCharts extends Application {
         return barChart;
     }
 
-    public BarChart<String, Number> createLoanRepaymentBarChart(int userId) {
+    public static BarChart<String, Number> createLoanRepaymentBarChart(int userId) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Month");
@@ -113,9 +115,9 @@ public class LedgerCharts extends Application {
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
         barChart.setTitle("Loan Repayments Over Time");
 
-        String sql = "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, SUM(principal_amount) as total_repaid " +
-                "FROM loans " +
-                "WHERE user_id = ? AND status = 'repaid' " +
+        String sql = "SELECT DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as total_repaid " +
+                "FROM savingloan " +
+                "WHERE user_id = ? AND transaction_type = 'repaid' " +
                 "GROUP BY month";
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -138,7 +140,7 @@ public class LedgerCharts extends Application {
         return barChart;
     }
 
-    public BarChart<String, Number> createSpendingTrendChart(int userId) {
+    public static BarChart<String, Number> createSpendingTrendChart(int userId) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Month");
@@ -173,6 +175,15 @@ public class LedgerCharts extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        JavaFXLauncher.initializeJavaFX();
+        Platform.setImplicitExit(false);
+        Platform.runLater(()->{
+            Stage stage=new Stage();
+            LedgerCharts charts=new LedgerCharts();
+            charts.start(stage);
+        });
+    
     }
 }
+
+
