@@ -11,8 +11,6 @@ import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
 /**

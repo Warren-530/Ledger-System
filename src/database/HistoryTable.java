@@ -64,7 +64,8 @@ public class HistoryTable {
         return 0;
     }
     
-        public static void getFilteredAndSortedHistory(Object[][] history, int filterIndex, int sortIndex, Date startDate, Date endDate, Date specificDate, double minAmount, double maxAmount, String sortOrder, String transactionType, int userId) {
+        public static void getFilteredAndSortedHistory(Object[][] history, int filterIndex, int sortIndex, Date startDate, Date endDate, Date specificDate, double minAmount,
+                double maxAmount, String sortOrder, String transactionType, int userId) {
         Connection connection = getConnection();
         StringBuilder sql = new StringBuilder("SELECT * FROM transactions WHERE user_id = ?");
         ArrayList<Object> parameters = new ArrayList<>();
@@ -140,7 +141,8 @@ public class HistoryTable {
             System.out.println("Error fetching filtered/sorted history: " + e.getMessage());
         }
     }
-        public static int getFilteredRowCount(int filterIndex, int sortIndex, Date startDate, Date endDate, Date specificDate, double minAmount, double maxAmount, String sortOrder, String transactionType, int userId) {
+        public static int getFilteredRowCount(int filterIndex, int sortIndex, Date startDate, Date endDate, Date specificDate, double minAmount, 
+                double maxAmount, String sortOrder, String transactionType, int userId) {
         Connection connection = getConnection();
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) AS row_count FROM transactions WHERE user_id = ?");
         ArrayList<Object> parameters = new ArrayList<>();
