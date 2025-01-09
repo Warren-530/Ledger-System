@@ -71,29 +71,9 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/CreditUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/ExportToCSV.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/DebitUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/LoanUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/HistoryTable.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/UserTable.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/TransactionsTable.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/LedgerCharts.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/MultiLineCellRenderer.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/LoanApply.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/CreditLoan.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/LoanRepay.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/MyTableModel.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/LedgerSystem.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/Login.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/TransactionUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/JavaFXLauncher.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/AccountBalance.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/HistoryUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/DatabaseConnector.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/DepositUI.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/ledger/system/RegistrationAndLogin.java</file>
-            <file>file:/C:/Users/Liyik/Documents/GitHub/Ledger-System/src/database/LoansTable.java</file>
+            <file>file:/D:/UM%20Regardings/WIX1002/Ledger-System/src/ledger/system/Login.java</file>
+            <file>file:/D:/UM%20Regardings/WIX1002/Ledger-System/src/ledger/system/LedgerSystem.java</file>
+            <file>file:/D:/UM%20Regardings/WIX1002/Ledger-System/src/database/DatabaseConnector.java</file>
         </group>
     </open-files>
 </project-private>

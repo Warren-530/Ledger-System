@@ -1,3 +1,7 @@
 
 nbproject/private/private.properties
 *.xml
+build/classes/database/DatabaseConnector.class
+nbproject/configs/javaFx.properties
+nbproject/private/private.xml
+src/database/DatabaseConnector.java
