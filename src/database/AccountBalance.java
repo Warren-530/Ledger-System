@@ -11,6 +11,25 @@ public class AccountBalance {
     public static Connection connection = getConnection();
 
     //method to get the lastest user balance
+    
+    public static String getName(int userId) {
+        String sql = "SELECT name FROM user WHERE user_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1,userId);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()){
+                return rs.getString("name");
+            } else {
+                return null;
+            }
+        }catch (SQLException e) {
+            System.out.println("Error fetching balance:"+e.getMessage());
+            return null;
+        }
+    }
+        
     public static double getBalance(int userId) {
         String sql = "SELECT balance FROM accountbalance WHERE user_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -74,11 +93,14 @@ public class AccountBalance {
     }
 
     //Update the balance for debit operation
-    public static void debitBalance(int userId, double amountToAdd) {
-        String selectSql = "SELECT balance FROM accountbalance WHERE user_id = ?";
-        String updateSql = "UPDATE accountbalance SET balance = ? WHERE user_id = ?";
 
-        try {
+    public static double debitBalance(int userId, double amountToAdd, boolean savingStatus,double percentage) {
+
+    
+
+        String selectSql = "SELECT balance FROM accountbalance WHERE user_id = ?";
+
+
             // Fetch the current balance
             double currentBalance = 0.0;
             try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
@@ -90,30 +112,42 @@ public class AccountBalance {
                 } else {
                     System.out.println("No account found for user_id: " + userId);
                 }
+
+                if (savingStatus){
+                    savingBalance(userId,(amountToAdd*percentage/100));
+                    return currentBalance + (amountToAdd*((100-percentage)/100));
+                }else{
+                    return currentBalance + amountToAdd;
+                }
+            }catch (SQLException e) {
+            System.out.println("Error updating balance: " + e.getMessage());
+            return currentBalance;  
+
             }
+        }
+    
+        
+        public static void updateBalance(int userId, double newBalance){
+          String updateSql = "UPDATE accountbalance SET balance = ? WHERE user_id = ?";
 
-            // Calculate the new balance
-            double newBalance = currentBalance + amountToAdd;
-
-            // Update the balance
             try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
                 updateStmt.setDouble(1, newBalance);
                 updateStmt.setInt(2, userId);
                 updateStmt.executeUpdate();
-            }
-        } catch (SQLException e) {
+            
+            }catch(SQLException e){
             System.out.println("Error updating balance: " + e.getMessage());
+            }
         }
-    }
+    
 
     //Update the balance for credit operation
-    public static void creditBalance(int userId, double amountToMinus) {
+    public static double creditBalance(int userId, double amountToMinus) {
         String selectSql = "SELECT balance FROM accountbalance WHERE user_id = ?";
-        String updateSql = "UPDATE accountbalance SET balance = ? WHERE user_id = ?";
-
+        double currentBalance = 0.0;
         try {
             // Fetch the current balance
-            double currentBalance = 0.0;
+            
             try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
                 selectStmt.setInt(1, userId);
                 ResultSet rs = selectStmt.executeQuery();
@@ -123,20 +157,55 @@ public class AccountBalance {
                 } else {
                     System.out.println("No account found for user_id: " + userId);
                 }
+                return currentBalance - amountToMinus;
             }
-
-            // Calculate the new balance
-            double newBalance = currentBalance - amountToMinus;
-
-            // Update the balance
-            try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
-                updateStmt.setDouble(1, newBalance);
-                updateStmt.setInt(2, userId);
-                updateStmt.executeUpdate();
-            }
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             System.out.println("Error updating balance: " + e.getMessage());
+
+        
         }
+        return currentBalance;
     }
+        
+        public static void savingBalance(int userId, double amount) {
+        String selectSql = "UPDATE accountbalance SET savings =? WHERE user_id = ?";
+        
+        double balance=getSavings(userId);
+        try {
+            // Fetch the current balance
+            LoansTable.insertSavingHistory(userId, amount);
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+                
+                selectStmt.setDouble(1, balance+amount);
+                selectStmt.setInt(2, userId);
+                
+                selectStmt.executeUpdate();
+            }
+        }catch (SQLException e) {
+            System.out.println("Error updating balance: " + e.getMessage());
+            
+            }
+        
+       
+        
+        }
+         public static void resetBalance(int userId) {
+        String selectSql = "UPDATE accountbalance SET savings =? WHERE user_id = ?";
+        
+        try {
+            // Fetch the current balance
+            
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+                
+                selectStmt.setDouble(1, 0);
+                selectStmt.setInt(2, userId);
+                
+                selectStmt.executeUpdate();
+            }
+        }catch (SQLException e) {
+            System.out.println("Error updating balance: " + e.getMessage());
+            
+            }
+         }
 
 }
