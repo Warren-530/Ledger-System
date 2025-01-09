@@ -124,29 +124,30 @@ public class Login extends JFrame{
                 if (e.getSource()==submit){
                     email=emailTextL.getText();
                     password=passTextL.getText();
-                    while (true){
+                    
                     if (!RegistrationAndLogin.isEmailValid(email)){
                         JOptionPane.showMessageDialog(null,"The email is not valid","Invalid email",JOptionPane.ERROR_MESSAGE);
                         emailTextL.setText("");
                         passTextL.setText("");
-                        break;
-                    }if (!UserTable.isRegisteredAccount(email)){
+                        
+                    }else if (!UserTable.isRegisteredAccount(email)){
                         JOptionPane.showMessageDialog(null,"The email has not been registered","Invalid email",JOptionPane.ERROR_MESSAGE);
-                    }
-                    try {
-                        if (!UserTable.checkPassword(email, password)) {
-                            JOptionPane.showMessageDialog(null,"Invalid email or password","Login Unsuccessful",JOptionPane.ERROR_MESSAGE);
-                            break;
-                        }else{
-                            userId = UserTable.getUserId(email);
-                            JOptionPane.showMessageDialog(null,"You have login successfully!Welcome to Ledger System!","Login Success",JOptionPane.INFORMATION_MESSAGE);
-                            frame.dispose();
-                            new TransactionUI();
-                            break;
-                        }
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                        break;
+                        
+                    }else{
+                        try {
+                            if (!UserTable.checkPassword(email, password)) {
+                                JOptionPane.showMessageDialog(null,"Invalid email or password","Login Unsuccessful",JOptionPane.ERROR_MESSAGE);
+
+                            }else{
+                                userId = UserTable.getUserId(email);
+                                JOptionPane.showMessageDialog(null,"You have login successfully!Welcome to Ledger System!","Login Success",JOptionPane.INFORMATION_MESSAGE);
+                                frame.dispose();
+                                new TransactionUI();
+
+                            }
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+
                         }
                     }
                 }
