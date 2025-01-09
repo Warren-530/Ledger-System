@@ -44,11 +44,11 @@ public class LoanApply {
             title.setBounds(100,25,600,50);
             title.setForeground(Color.white);
             
-            
+            double thisloan=Double.parseDouble(String.format("%.2f",loan));
             JLabel totalLoan=new JLabel();
-            totalLoan.setText("Total loan         : RM "+loan);
+            totalLoan.setText("Total loan         : RM "+thisloan);
             totalLoan.setFont(new Font("Monospaced",Font.BOLD,24));
-            totalLoan.setBounds(50,120,500,50);
+            totalLoan.setBounds(50,120,600,50);
             
 
             JLabel monthly=new JLabel();
@@ -113,7 +113,7 @@ public class LoanApply {
             apply.addActionListener((ActionEvent e)->{
                if(e.getSource()==apply){
                     
-                    LoansTable.insertLoan(Login.userId, principal , interest, period, loan, "Unpaid");
+                    LoansTable.insertLoan(Login.userId, principal , interest, period, thisloan, "Unpaid");
                     JOptionPane.showMessageDialog(null,"Credit loan application success!","Loan application completed",JOptionPane.PLAIN_MESSAGE);
                     TransactionUI.WindowStatus=false;
                     TransactionUI.loanAlert=true;
